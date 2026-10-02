@@ -2,6 +2,8 @@
 
 Uma Pokédex interativa inspirada no aparelho clássico dos jogos e do anime, construída com **Next.js 16**, **React 19**, **Tailwind CSS 4** e **Motion**, consumindo dados da [PokeAPI](https://pokeapi.co/).
 
+**Acesse:** [new-pokedex-one.vercel.app](https://new-pokedex-one.vercel.app)
+
 Todos os 1025 Pokémon, das nove gerações, com cards animados, busca instantânea, cadeia evolutiva completa (incluindo métodos que mudam de acordo com a geração), sprites alternativos, formas regionais, gritos originais e versão em português e inglês.
 
 ## Funcionalidades
