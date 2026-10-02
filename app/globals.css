@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-normal: #A8A878;
+  --color-fire: #F08030;
+  --color-water: #6890F0;
+  --color-electric: #F8D030;
+  --color-grass: #78C850;
+  --color-ice: #98D8D8;
+  --color-fighting: #C03028;
+  --color-poison: #A040A0;
+  --color-ground: #E0C068;
+  --color-flying: #A890F0;
+  --color-psychic: #F85888;
+  --color-bug: #A8B820;
+  --color-rock: #B8A038;
+  --color-ghost: #705898;
+  --color-dragon: #7038F8;
+  --color-dark: #705848;
+  --color-steel: #B8B8D0;
+  --color-fairy: #EE99AC;
+}
+
+html:has([data-intro]),
+html:has(dialog[open]) {
+  overflow: hidden;
+}
