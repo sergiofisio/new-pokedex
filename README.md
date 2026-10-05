@@ -28,12 +28,22 @@ Todos os 1025 Pokémon, das nove gerações, com cards animados, busca instantâ
 - **Evoluções por geração**: Pokémon como Eevee mostram todos os métodos possíveis (pedra, amizade, horário, local, tipo de golpe conhecido...) identificando em quais gerações cada método vale.
 
 ### Desafios
-- **Quatro modos**: **Silhueta** (adivinhe pela sombra), **Descrição** (pelo texto da Pokédex, com o nome ocultado), **Zoom** (a imagem começa ampliada e se afasta a cada erro) e **Infinito** (compare tipos, geração, altura, peso, cor e estágio evolutivo a cada palpite).
+- **Sete modos**:
+  - **Silhueta**: adivinhe pela sombra.
+  - **Descrição**: pelo texto da Pokédex, com o nome ocultado.
+  - **Zoom**: a imagem começa ampliada e se afasta a cada erro.
+  - **Som**: reconheça o Pokémon pelo grito, moderno ou clássico.
+  - **Fusão**: descubra a cabeça e o corpo de uma fusão do Pokémon Infinite Fusion, vendo os tipos dos dois. Palpites da mesma linha evolutiva ficam amarelos.
+  - **Ginásio**: a partir do líder, da cidade, do tipo e da insígnia, encontre o Pokémon que não pertence ao ginásio.
+  - **Infinito**: compare tipos, geração, altura, peso, cor e estágio evolutivo a cada palpite.
+- **Duelo entre treinadores** em `/duelo`, com a mesma série de 5 desafios para os dois:
+  - **Por link**: cada um joga quando quiser; a pontuação considera erros e rapidez.
+  - **Ao vivo**: os dois na mesma sala (Supabase Realtime), com contagem regressiva e 60 segundos por rodada; quem acerta primeiro faz 3 pontos e o segundo faz 1.
 - **Desafio diário e partidas aleatórias**: o Pokémon do dia é o mesmo para todos e muda à meia-noite; o modo aleatório não tem limite.
 - **Busca lateral com filtros** por geração e tipo, listando todos os Pokémon que combinam com o que foi digitado.
 - **Pistas progressivas** liberadas conforme os erros (geração, tipo, cor, estágio, categoria, primeira letra e formato do nome), com atalho para aplicar a pista como filtro.
 - **Estatísticas** de vitórias, sequência atual, melhor sequência e distribuição de tentativas.
-- **XP, níveis e insígnias**: cada vitória rende experiência (com bônus por acertar rápido e por sequências), o jogador sobe de patente de Novato a Mestre Pokémon e desbloqueia 14 insígnias em bronze, prata e ouro.
+- **XP, níveis e insígnias**: cada vitória rende experiência (com bônus por acertar rápido e por sequências), o jogador sobe de patente de Novato a Mestre Pokémon e desbloqueia 17 insígnias em bronze, prata e ouro.
 
 ### Contas e perfil
 - **Login com Google, GitHub ou e-mail e senha**, com nome de usuário único.
@@ -53,9 +63,10 @@ Todos os 1025 Pokémon, das nove gerações, com cards animados, busca instantâ
 | Animações | Motion |
 | Requisições | Axios, com cache em memória |
 | Dados | PokeAPI |
-| Contas e banco | Supabase (Auth, Postgres com RLS e Storage) |
+| Contas e banco | Supabase (Auth, Postgres com RLS, Storage e Realtime) |
 | QR Code | qrcode.react |
 | Áudio | Gritos da PokeAPI e do Pokémon Showdown |
+| Fusões | Sprites da comunidade Pokémon Infinite Fusion |
 | Deploy | Vercel |
 
 ## Como rodar localmente
@@ -106,6 +117,8 @@ Acesse [http://localhost:3000](http://localhost:3000).
 | `yarn build` | Build de produção |
 | `yarn start` | Servidor de produção |
 | `yarn lint` | Análise estática com ESLint |
+| `node scripts/build-fusions.mjs` | Regera a lista de fusões com sprite (até o #251) |
+| `node scripts/build-gyms.mjs` | Regera os dados dos ginásios a partir da PokeAPI |
 
 ## Estrutura
 
@@ -113,7 +126,9 @@ Acesse [http://localhost:3000](http://localhost:3000).
 app/
 ├── components/   # Componentes visuais (cards, modal, desafios, perfil, login, doações...)
 ├── context/      # Contextos de idioma, autenticação e da Pokédex
+├── data/         # Fusões e ginásios gerados pelos scripts
 ├── desafios/     # Central de desafios e página de cada modo
+├── duelo/        # Lobby e salas de duelo
 ├── entrar/       # Login e cadastro
 ├── perfil/       # Edição do perfil
 ├── u/[username]/ # Perfil público

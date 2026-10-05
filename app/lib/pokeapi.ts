@@ -257,6 +257,8 @@ export interface ChallengeData {
     stage: number;
     genus: string;
     flavorTexts: string[];
+    chainUrl: string;
+    cries: { latest: string | null; legacy: string | null };
 }
 
 function getEvolutionStage(link: ChainLink, name: string, depth = 1): number | null {
@@ -290,5 +292,7 @@ export async function fetchChallengeData(id: number): Promise<ChallengeData> {
         stage: getEvolutionStage(chain, species.name) ?? 1,
         genus: species.genera.find(({ language }) => language.name === 'en')?.genus ?? '',
         flavorTexts: [...new Set(flavorTexts)],
+        chainUrl: species.evolution_chain.url,
+        cries: { latest: pokemon.cries?.latest ?? null, legacy: pokemon.cries?.legacy ?? null },
     }
 }

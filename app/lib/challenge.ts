@@ -1,4 +1,10 @@
-export const CHALLENGE_MODES = ['silhueta', 'descricao', 'zoom', 'infinito'] as const
+import { FUSION_COUNT, getFusion } from "./fusion";
+import { GYM_COUNT, buildGymRound } from "./gym";
+import { hash } from "./seed";
+
+export { seededFraction } from "./seed";
+
+export const CHALLENGE_MODES = ['silhueta', 'descricao', 'zoom', 'som', 'fusao', 'ginasio', 'infinito'] as const
 
 export type ChallengeMode = typeof CHALLENGE_MODES[number]
 export type ChallengeVariant = 'daily' | 'random'
@@ -11,30 +17,43 @@ export const isChallengeMode = (value: string): value is ChallengeMode =>
 
 export const supportsDaily = (mode: ChallengeMode) => mode !== 'infinito'
 
+export type SessionKind = 'classic' | 'fusion' | 'gym' | 'infinite'
+
+export const getSessionKind = (mode: ChallengeMode): SessionKind =>
+    mode === 'fusao' ? 'fusion' : mode === 'ginasio' ? 'gym' : mode === 'infinito' ? 'infinite' : 'classic'
+
+const POOL_SIZE: Record<SessionKind, number> = { classic: TOTAL_SPECIES, infinite: TOTAL_SPECIES, fusion: FUSION_COUNT, gym: GYM_COUNT }
+const POOL_OFFSET: Record<SessionKind, number> = { classic: 1, infinite: 1, fusion: 0, gym: 0 }
+
+export function getSolution(mode: ChallengeMode, target: number): number[] {
+    const kind = getSessionKind(mode)
+    if (kind === 'fusion') {
+        const { head, body } = getFusion(target)
+        return [head, body]
+    }
+    if (kind === 'gym') return [buildGymRound(target).intruder]
+    return [target]
+}
+
+export const isRoundSolved = (mode: ChallengeMode, target: number, guesses: number[]) =>
+    getSolution(mode, target).every((id) => guesses.includes(id))
+
 export function getDateKey(date = new Date()) {
     const month = String(date.getMonth() + 1).padStart(2, '0')
     const day = String(date.getDate()).padStart(2, '0')
     return `${date.getFullYear()}-${month}-${day}`
 }
 
-function hash(text: string) {
-    let value = 0x811c9dc5
-    for (let index = 0; index < text.length; index++) {
-        value ^= text.charCodeAt(index)
-        value = Math.imul(value, 0x01000193)
-    }
-    return value >>> 0
+export function getDailyTarget(mode: ChallengeMode, dateKey: string) {
+    const kind = getSessionKind(mode)
+    return (hash(`${dateKey}:${mode}`) % POOL_SIZE[kind]) + POOL_OFFSET[kind]
 }
 
-export const seededFraction = (seed: string) => hash(seed) / 2 ** 32
-
-export const getDailyTarget = (mode: ChallengeMode, dateKey: string) =>
-    (hash(`${dateKey}:${mode}`) % TOTAL_SPECIES) + 1
-
-export function getRandomTarget(exclude?: number) {
-    let id = exclude
-    while (id === exclude) id = Math.floor(Math.random() * TOTAL_SPECIES) + 1
-    return id as number
+export function getRandomTarget(mode: ChallengeMode, exclude?: number) {
+    const kind = getSessionKind(mode)
+    let target = exclude
+    while (target === exclude) target = Math.floor(Math.random() * POOL_SIZE[kind]) + POOL_OFFSET[kind]
+    return target as number
 }
 
 export function msUntilTomorrow(now = new Date()) {
@@ -110,7 +129,7 @@ export function saveDailyGuesses(mode: ChallengeMode, dateKey: string, guesses: 
 }
 
 export const isSolvedToday = (mode: ChallengeMode, dateKey: string) =>
-    readDailyGuesses(mode, dateKey).includes(getDailyTarget(mode, dateKey))
+    isRoundSolved(mode, getDailyTarget(mode, dateKey), readDailyGuesses(mode, dateKey))
 
 const getPreviousDateKey = (dateKey: string) => {
     const [year, month, day] = dateKey.split('-').map(Number)

@@ -1,6 +1,6 @@
 'use client'
 
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
@@ -79,6 +79,98 @@ export function ZoomClue({ data, revealed, wrongCount }: ClueProps) {
                 >
                     <Artwork data={data} revealed={revealed} />
                 </motion.div>
+            </div>
+        </ClueCard>
+    )
+}
+
+const WAVE_BARS = 24
+
+export function CryClue({ data, revealed }: ClueProps) {
+    const { t } = useLanguage()
+    const audio = useRef<HTMLAudioElement | null>(null)
+    const [playing, setPlaying] = useState(false)
+    const [failed, setFailed] = useState(false)
+    const sources = (['latest', 'legacy'] as const).filter((key) => data.cries[key])
+    const [source, setSource] = useState<'latest' | 'legacy'>(sources[0] ?? 'latest')
+    const url = data.cries[source]
+
+    const play = async () => {
+        if (!url) return
+        audio.current?.pause()
+        const next = new Audio(url)
+        next.volume = 0.6
+        next.onended = () => setPlaying(false)
+        audio.current = next
+        try {
+            setFailed(false)
+            setPlaying(true)
+            await next.play()
+        } catch {
+            setPlaying(false)
+            setFailed(true)
+        }
+    }
+
+    useEffect(() => () => audio.current?.pause(), [])
+
+    return (
+        <ClueCard>
+            <div className="flex flex-col items-center gap-5">
+                {revealed ? (
+                    <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }} className="relative size-48">
+                        <Artwork data={data} revealed />
+                    </motion.div>
+                ) : (
+                    <div className="flex h-24 w-full max-w-sm items-center justify-center gap-1" aria-hidden>
+                        {Array.from({ length: WAVE_BARS }, (_, index) => {
+                            const height = 20 + seededFraction(`${data.id}:wave:${index}`) * 80
+                            return (
+                                <motion.span
+                                    key={index}
+                                    className="w-2 rounded-full bg-red-500"
+                                    initial={false}
+                                    animate={playing ? { height: [`${height * 0.3}%`, `${height}%`, `${height * 0.3}%`] } : { height: `${height * 0.35}%` }}
+                                    transition={playing
+                                        ? { type: 'tween', duration: 0.5 + (index % 5) * 0.08, repeat: Infinity, ease: 'easeInOut' }
+                                        : { type: 'tween', duration: 0.3 }}
+                                />
+                            )
+                        })}
+                    </div>
+                )}
+
+                {url ? (
+                    <motion.button
+                        type="button"
+                        onClick={play}
+                        whileHover={{ scale: 1.05 }}
+                        whileTap={{ scale: 0.92 }}
+                        className="flex items-center gap-2 rounded-full bg-red-600 px-6 py-3 text-lg font-black text-white shadow-lg"
+                    >
+                        <svg viewBox="0 0 24 24" className="size-6 fill-current" aria-hidden><path d="M8 5v14l11-7z" /></svg>
+                        {t(playing ? 'cryPlaying' : 'cryPlay')}
+                    </motion.button>
+                ) : (
+                    <p className="text-sm text-zinc-500">{t('cryUnavailable')}</p>
+                )}
+
+                {sources.length > 1 && (
+                    <div className="flex gap-1 rounded-full bg-zinc-100 p-1 text-xs font-bold dark:bg-zinc-800" role="group" aria-label={t('cryVersion')}>
+                        {sources.map((key) => (
+                            <button
+                                key={key}
+                                type="button"
+                                aria-pressed={source === key}
+                                onClick={() => setSource(key)}
+                                className={`rounded-full px-3 py-1 transition-colors ${source === key ? 'bg-white shadow dark:bg-zinc-700' : 'text-zinc-500'}`}
+                            >
+                                {t(key === 'latest' ? 'cryLatest' : 'cryLegacy')}
+                            </button>
+                        ))}
+                    </div>
+                )}
+                {failed && <p role="alert" className="text-xs text-red-600">{t('cryError')}</p>}
             </div>
         </ClueCard>
     )

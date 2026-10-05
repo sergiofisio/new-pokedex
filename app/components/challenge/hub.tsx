@@ -130,6 +130,25 @@ export default function ChallengeHub() {
                             </motion.li>
                         )
                     })}
+                    <motion.li
+                        initial={{ opacity: 0, y: 24, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1, transition: { delay: 0.1 + CHALLENGE_MODES.length * 0.08 } }}
+                    >
+                        <Link href="/duelo" className="block rounded-3xl focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-red-600">
+                            <motion.div
+                                whileHover={{ y: -6, scale: 1.02 }}
+                                whileTap={{ scale: 0.97 }}
+                                className="relative flex min-h-36 items-center gap-5 overflow-hidden rounded-3xl border-4 border-white/30 bg-linear-to-br from-red-600 to-orange-500 p-6 text-white shadow-xl"
+                            >
+                                <span aria-hidden="true" className="absolute -right-8 -bottom-8 size-36 rounded-full border-14 border-white/10" />
+                                <span aria-hidden="true" className="flex size-16 shrink-0 items-center justify-center rounded-2xl bg-white/15 text-4xl">⚔️</span>
+                                <div className="relative">
+                                    <h3 className="text-2xl font-black">{t('duelTitle')}</h3>
+                                    <p className="text-sm opacity-90">{t('duelHubDesc')}</p>
+                                </div>
+                            </motion.div>
+                        </Link>
+                    </motion.li>
                 </ul>
             </div>
         </ChallengeBackdrop>

@@ -8,6 +8,11 @@ const nextConfig: NextConfig = {
         hostname: 'raw.githubusercontent.com',
         pathname: '/PokeAPI/sprites/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'bitbucket.org',
+        pathname: '/infinitefusionsprites/**',
+      },
     ],
   },
 };

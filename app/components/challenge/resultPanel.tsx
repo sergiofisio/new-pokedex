@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useEffectEvent, useState } from "react";
+import { useEffect, useEffectEvent, useState, type ReactNode } from "react";
 import Image from "next/image";
 import { motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
@@ -8,16 +8,21 @@ import Link from "next/link";
 import { formatCountdown, getDateKey, getNextMode, msUntilTomorrow, type ChallengeMode, type ChallengeStats, type ChallengeVariant } from "../../lib/challenge";
 import { MODE_META, ModeIcon } from "./modes";
 import { getOfficialArtwork } from "../../lib/sprites";
-import { prettify } from "../../i18n/translations";
 import type { ChallengeStatus } from "../../hooks/useChallenge";
 import { getLevelInfo, readLocalStatsMap, totalXp, type Reward } from "../../lib/progression";
 import { BadgeIcon, XpBar, badgeDescription, badgeTitle } from "../progression";
-import { CARD } from "./shared";
+import { CARD, useSpeciesName } from "./shared";
+
+export interface ChallengeAnswer {
+    ids: number[];
+    label: string;
+    artwork?: ReactNode;
+}
 
 interface ResultPanelProps {
     mode: ChallengeMode;
     status: Exclude<ChallengeStatus, 'playing'>;
-    target: { id: number; name: string };
+    answer: ChallengeAnswer;
     attempts: number;
     stats: ChallengeStats;
     reward: Reward | null;
@@ -27,10 +32,11 @@ interface ResultPanelProps {
     onShowPokedex: (id: number) => void;
 }
 
-export default function ResultPanel({ mode, status, target, attempts, stats, reward, variant, onNext, onNewDay, onShowPokedex }: ResultPanelProps) {
+export default function ResultPanel({ mode, status, answer, attempts, stats, reward, variant, onNext, onNewDay, onShowPokedex }: ResultPanelProps) {
     const { t } = useLanguage()
+    const getName = useSpeciesName()
     const won = status === 'won'
-    const name = prettify(target.name)
+    const name = answer.label
     const average = stats.wins ? (stats.totalAttempts / stats.wins).toFixed(1) : '-'
     const maxBucket = Math.max(1, ...stats.distribution)
     const [nextMode] = useState(() => getNextMode(mode, getDateKey()))
@@ -59,7 +65,9 @@ export default function ResultPanel({ mode, status, target, attempts, stats, rew
                 transition={{ type: 'spring', stiffness: 180, damping: 12, delay: 0.15 }}
                 className="relative mx-auto my-3 size-40"
             >
-                <Image src={getOfficialArtwork(target.id)} alt={t('illustrationOf', { name })} fill sizes="10rem" className="object-contain drop-shadow-xl" />
+                {answer.artwork ?? (
+                    <Image src={getOfficialArtwork(answer.ids[0])} alt={t('illustrationOf', { name })} fill sizes="10rem" className="object-contain drop-shadow-xl" />
+                )}
             </motion.div>
 
             <p className="text-lg font-bold">{t('itWas', { name })}</p>
@@ -106,15 +114,18 @@ export default function ResultPanel({ mode, status, target, attempts, stats, rew
             )}
 
             <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
-                <motion.button
-                    type="button"
-                    onClick={() => onShowPokedex(target.id)}
-                    whileHover={{ scale: 1.04 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="rounded-xl bg-zinc-900 px-4 py-2 font-bold text-white dark:bg-white dark:text-zinc-900"
-                >
-                    {t('viewInPokedex')}
-                </motion.button>
+                {answer.ids.map((id) => (
+                    <motion.button
+                        key={id}
+                        type="button"
+                        onClick={() => onShowPokedex(id)}
+                        whileHover={{ scale: 1.04 }}
+                        whileTap={{ scale: 0.95 }}
+                        className="rounded-xl bg-zinc-900 px-4 py-2 font-bold text-white dark:bg-white dark:text-zinc-900"
+                    >
+                        {answer.ids.length > 1 ? `${t('viewInPokedex')}: ${getName(id)}` : t('viewInPokedex')}
+                    </motion.button>
+                ))}
                 {variant === 'random' ? (
                     <motion.button
                         type="button"

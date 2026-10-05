@@ -26,9 +26,10 @@ interface GuessInputProps {
     onGuess: (id: number) => void;
     filters: GuessFilters;
     onFiltersChange: (filters: GuessFilters) => void;
+    maxId?: number;
 }
 
-export default function GuessInput({ guessed, onGuess, filters, onFiltersChange }: GuessInputProps) {
+export default function GuessInput({ guessed, onGuess, filters, onFiltersChange, maxId = Infinity }: GuessInputProps) {
     const { t, typeName } = useLanguage()
     const species = useSpeciesList()
     const typeIds = useAsyncData(filters.type ?? '', loadTypeIds)
@@ -37,6 +38,7 @@ export default function GuessInput({ guessed, onGuess, filters, onFiltersChange 
     const id = useId()
     const listId = `${id}-list`
 
+    const generations = maxId === Infinity ? GENERATIONS : GENERATIONS.filter(({ id }) => id <= getGenerationOfId(maxId))
     const hasFilters = filters.generation !== null || filters.type !== null
     const isOpen = query.trim() !== '' || hasFilters
     const typeSet = typeIds?.status === 'success' && typeIds.data ? new Set(typeIds.data) : null
@@ -45,7 +47,8 @@ export default function GuessInput({ guessed, onGuess, filters, onFiltersChange 
     const options = isOpen && species?.status === 'success' && !loadingType
         ? (query.trim() ? searchSpecies(species.data, query) : species.data).filter(({ url }) => {
             const speciesId = getSpeciesId(url)
-            return !guessed.includes(speciesId)
+            return speciesId <= maxId
+                && !guessed.includes(speciesId)
                 && (filters.generation === null || getGenerationOfId(speciesId) === filters.generation)
                 && (!typeSet || typeSet.has(speciesId))
         })
@@ -113,8 +116,8 @@ export default function GuessInput({ guessed, onGuess, filters, onFiltersChange 
                         </button>
                     )}
                 </legend>
-                <div className="grid grid-cols-9 gap-1" role="group" aria-label={t('generation')}>
-                    {GENERATIONS.map((generation) => {
+                <div className="grid gap-1" style={{ gridTemplateColumns: `repeat(${generations.length}, minmax(0, 1fr))` }} role="group" aria-label={t('generation')}>
+                    {generations.map((generation) => {
                         const selected = filters.generation === generation.id
                         return (
                             <button

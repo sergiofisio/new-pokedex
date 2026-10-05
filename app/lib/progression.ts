@@ -125,6 +125,9 @@ const BADGES: BadgeDefinition[] = [
     { id: 'descricaoMaster', icon: '📖', tier: 'gold', target: 25, value: (t) => t.winsByMode.descricao },
     { id: 'zoomMaster', icon: '🔍', tier: 'gold', target: 25, value: (t) => t.winsByMode.zoom },
     { id: 'infinitoMaster', icon: '🧩', tier: 'gold', target: 25, value: (t) => t.winsByMode.infinito },
+    { id: 'somMaster', icon: '🎧', tier: 'gold', target: 25, value: (t) => t.winsByMode.som },
+    { id: 'fusaoMaster', icon: '🧬', tier: 'gold', target: 25, value: (t) => t.winsByMode.fusao },
+    { id: 'ginasioMaster', icon: '🏟️', tier: 'gold', target: 25, value: (t) => t.winsByMode.ginasio },
 ]
 
 export interface Badge {

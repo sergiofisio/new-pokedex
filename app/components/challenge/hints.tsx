@@ -3,15 +3,15 @@
 import { AnimatePresence, motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
 import { useTranslatedText } from "../../hooks/useTranslatedText";
-import { COLOR_NAMES, prettify, type MessageKey } from "../../i18n/translations";
+import { COLOR_NAMES, prettify } from "../../i18n/translations";
 import type { ChallengeData } from "../../lib/pokeapi";
 import { GENERATIONS } from "../generationMenu";
 import type { GuessFilters } from "./guessInput";
 import { CARD } from "./shared";
 
-interface Hint {
+export interface Hint {
     at: number;
-    label: MessageKey;
+    label: string;
     value: string;
     filter?: Partial<GuessFilters>;
 }
@@ -36,21 +36,34 @@ export default function ChallengeHints({ data, wrongCount, revealed, filters, on
     const hints: Hint[] = [
         {
             at: 2,
-            label: 'generation',
+            label: t('generation'),
             value: generation ? `${generation.label} · ${generation.region}` : String(data.generation),
             filter: { generation: data.generation },
         },
-        { at: 4, label: 'hintMainType', value: typeName(data.types[0]), filter: { type: data.types[0] } },
-        { at: 6, label: 'hintTypes', value: data.types.map(typeName).join(' / ') },
-        { at: 8, label: 'attrColor', value: COLOR_NAMES[language][data.color] ?? prettify(data.color) },
-        { at: 10, label: 'attrStage', value: t('hintStageValue', { n: data.stage }) },
-        { at: 12, label: 'hintGenus', value: genus.text },
-        { at: 15, label: 'hintFirstLetter', value: name[0] },
-        { at: 18, label: 'hintNamePattern', value: namePattern(name) },
+        { at: 4, label: t('hintMainType'), value: typeName(data.types[0]), filter: { type: data.types[0] } },
+        { at: 6, label: t('hintTypes'), value: data.types.map(typeName).join(' / ') },
+        { at: 8, label: t('attrColor'), value: COLOR_NAMES[language][data.color] ?? prettify(data.color) },
+        { at: 10, label: t('attrStage'), value: t('hintStageValue', { n: data.stage }) },
+        { at: 12, label: t('hintGenus'), value: genus.text },
+        { at: 15, label: t('hintFirstLetter'), value: name[0] },
+        { at: 18, label: t('hintNamePattern'), value: namePattern(name) },
     ]
+    return <HintBoard hints={hints} wrongCount={wrongCount} revealed={revealed} filters={filters} onApplyFilter={onApplyFilter} />
+}
+
+interface HintBoardProps {
+    hints: Hint[];
+    wrongCount: number;
+    revealed: boolean;
+    filters?: GuessFilters;
+    onApplyFilter?: (filter: Partial<GuessFilters>) => void;
+}
+
+export function HintBoard({ hints, wrongCount, revealed, filters, onApplyFilter }: HintBoardProps) {
+    const { t } = useLanguage()
     const next = hints.find((hint) => !revealed && wrongCount < hint.at)
     const isApplied = (filter: Partial<GuessFilters>) =>
-        Object.entries(filter).every(([key, value]) => filters[key as keyof GuessFilters] === value)
+        Object.entries(filter).every(([key, value]) => filters?.[key as keyof GuessFilters] === value)
 
     return (
         <motion.section initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className={`${CARD} p-5`}>
@@ -73,10 +86,10 @@ export default function ChallengeHints({ data, wrongCount, revealed, filters, on
                                         className="flex h-full items-center gap-2 rounded-2xl bg-sky-600 px-3 py-2 text-white shadow"
                                     >
                                         <span className="min-w-0 flex-1">
-                                            <span className="block text-[10px] font-black uppercase tracking-wide opacity-80">{t(hint.label)}</span>
+                                            <span className="block text-[10px] font-black uppercase tracking-wide opacity-80">{hint.label}</span>
                                             <span className="block truncate font-black" title={hint.value}>{hint.value}</span>
                                         </span>
-                                        {hint.filter && !revealed && (
+                                        {hint.filter && onApplyFilter && !revealed && (
                                             <button
                                                 type="button"
                                                 disabled={isApplied(hint.filter)}
@@ -95,7 +108,7 @@ export default function ChallengeHints({ data, wrongCount, revealed, filters, on
                                     >
                                         <span aria-hidden="true">🔒</span>
                                         <span className="min-w-0 flex-1">
-                                            <span className="block text-[10px] font-black uppercase tracking-wide">{t(hint.label)}</span>
+                                            <span className="block text-[10px] font-black uppercase tracking-wide">{hint.label}</span>
                                             <span className="block text-xs">{t('hintUnlocksAt', { n: hint.at })}</span>
                                         </span>
                                     </motion.div>
