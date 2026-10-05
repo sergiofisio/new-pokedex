@@ -77,6 +77,8 @@ export interface SpeciesDetail {
     is_legendary: boolean;
     is_mythical: boolean;
     capture_rate: number;
+    color: NamedResource;
+    generation: NamedResource;
     evolution_chain: {
         url: string;
     };
@@ -183,6 +185,20 @@ export async function fetchAllSpecies() {
     return data.results
 }
 
+export const POKEMON_TYPES = [
+    'normal', 'fire', 'water', 'grass', 'electric', 'ice', 'fighting', 'poison', 'ground',
+    'flying', 'psychic', 'bug', 'rock', 'ghost', 'dragon', 'dark', 'steel', 'fairy',
+]
+
+const GENERATION_LAST_IDS = [151, 251, 386, 493, 649, 721, 809, 905, 1025]
+
+export const getGenerationOfId = (id: number) => GENERATION_LAST_IDS.findIndex((last) => id <= last) + 1
+
+export async function fetchSpeciesIdsOfType(type: string) {
+    const data = await cachedGet<{ pokemon: { pokemon: Species }[] }>(`${API_URL}type/${type}/`)
+    return data.pokemon.map(({ pokemon }) => getSpeciesId(pokemon.url))
+}
+
 const normalizeSearch = (text: string) => text.toLowerCase().replace(/[^a-z0-9]/g, '')
 
 export function searchSpecies(species: Species[], query: string) {
@@ -228,4 +244,51 @@ export async function fetchPokedexEntry(speciesId: number): Promise<PokedexEntry
     ])
 
     return { species, chain, varieties: varieties.filter((variety) => variety !== null) }
+}
+
+export interface ChallengeData {
+    id: number;
+    name: string;
+    types: string[];
+    generation: number;
+    height: number;
+    weight: number;
+    color: string;
+    stage: number;
+    genus: string;
+    flavorTexts: string[];
+}
+
+function getEvolutionStage(link: ChainLink, name: string, depth = 1): number | null {
+    if (link.species.name === name) return depth
+    for (const next of link.evolves_to) {
+        const stage = getEvolutionStage(next, name, depth + 1)
+        if (stage !== null) return stage
+    }
+    return null
+}
+
+export async function fetchChallengeData(id: number): Promise<ChallengeData> {
+    const species = await cachedGet<SpeciesDetail>(`${API_URL}pokemon-species/${id}/`)
+    const [pokemon, { chain }] = await Promise.all([
+        cachedGet<PokemonData>(`${API_URL}pokemon/${id}/`),
+        cachedGet<EvolutionChain>(species.evolution_chain.url),
+    ])
+
+    const flavorTexts = species.flavor_text_entries
+        .filter(({ language }) => language.name === 'en')
+        .map(({ flavor_text }) => flavor_text.replace(/[\f\n\r\u00ad]+/g, ' ').replace(/\s+/g, ' ').trim())
+
+    return {
+        id,
+        name: species.name,
+        types: [...pokemon.types].sort((a, b) => a.slot - b.slot).map(({ type }) => type.name),
+        generation: getSpeciesId(species.generation.url),
+        height: pokemon.height,
+        weight: pokemon.weight,
+        color: species.color.name,
+        stage: getEvolutionStage(chain, species.name) ?? 1,
+        genus: species.genera.find(({ language }) => language.name === 'en')?.genus ?? '',
+        flavorTexts: [...new Set(flavorTexts)],
+    }
 }

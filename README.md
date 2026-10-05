@@ -27,6 +27,22 @@ Todos os 1025 Pokémon, das nove gerações, com cards animados, busca instantâ
 - Seções de **informações**, **status base** com barras animadas, **habilidades**, **formas alternativas**, **galeria de sprites** e **cadeia evolutiva**.
 - **Evoluções por geração**: Pokémon como Eevee mostram todos os métodos possíveis (pedra, amizade, horário, local, tipo de golpe conhecido...) identificando em quais gerações cada método vale.
 
+### Desafios
+- **Quatro modos**: **Silhueta** (adivinhe pela sombra), **Descrição** (pelo texto da Pokédex, com o nome ocultado), **Zoom** (a imagem começa ampliada e se afasta a cada erro) e **Infinito** (compare tipos, geração, altura, peso, cor e estágio evolutivo a cada palpite).
+- **Desafio diário e partidas aleatórias**: o Pokémon do dia é o mesmo para todos e muda à meia-noite; o modo aleatório não tem limite.
+- **Busca lateral com filtros** por geração e tipo, listando todos os Pokémon que combinam com o que foi digitado.
+- **Pistas progressivas** liberadas conforme os erros (geração, tipo, cor, estágio, categoria, primeira letra e formato do nome), com atalho para aplicar a pista como filtro.
+- **Estatísticas** de vitórias, sequência atual, melhor sequência e distribuição de tentativas.
+- **XP, níveis e insígnias**: cada vitória rende experiência (com bônus por acertar rápido e por sequências), o jogador sobe de patente de Novato a Mestre Pokémon e desbloqueia 14 insígnias em bronze, prata e ouro.
+
+### Contas e perfil
+- **Login com Google, GitHub ou e-mail e senha**, com nome de usuário único.
+- **Progresso sincronizado**: estatísticas e palpites do dia ficam salvos na conta e são mesclados com o que já existia no navegador.
+- **Perfil público** em `/u/nome-de-usuario`, com foto, nome de exibição, bio, Pokémon favorito, **equipe de até 6 Pokémon**, nível, insígnias e estatísticas. O perfil pode ser público ou privado.
+
+### Apoie o projeto
+- Página de **doações via Pix** (QR Code e copia e cola gerados no navegador, com valor opcional) e **Ko-fi**.
+
 ## Tecnologias
 
 | Camada | Ferramenta |
@@ -37,6 +53,8 @@ Todos os 1025 Pokémon, das nove gerações, com cards animados, busca instantâ
 | Animações | Motion |
 | Requisições | Axios, com cache em memória |
 | Dados | PokeAPI |
+| Contas e banco | Supabase (Auth, Postgres com RLS e Storage) |
+| QR Code | qrcode.react |
 | Áudio | Gritos da PokeAPI e do Pokémon Showdown |
 | Deploy | Vercel |
 
@@ -54,6 +72,22 @@ Crie um arquivo `.env` na raiz:
 
 ```env
 NEXT_PUBLIC_POKEMON_API_URL=https://pokeapi.co/api/v2/
+
+# Contas e sincronização (opcional)
+NEXT_PUBLIC_SUPABASE_URL=https://seu-projeto.supabase.co
+NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=sua-chave-publica
+
+# Doações (opcional)
+NEXT_PUBLIC_PIX_KEY=sua-chave-pix
+NEXT_PUBLIC_PIX_NAME="Nome do Titular"
+NEXT_PUBLIC_PIX_CITY="Cidade"
+NEXT_PUBLIC_KOFI_URL=https://ko-fi.com/seu-usuario
+```
+
+As tabelas, políticas de acesso e o bucket de avatares do Supabase estão em `supabase/migrations`. Para aplicá-las:
+
+```bash
+npx supabase db push --db-url "postgresql://..."
 ```
 
 Depois, inicie o servidor de desenvolvimento:
@@ -77,14 +111,21 @@ Acesse [http://localhost:3000](http://localhost:3000).
 
 ```
 app/
-├── components/   # Componentes visuais (cards, modal, menu, busca, Poké Ball de abertura...)
-├── context/      # Contextos de idioma e da Pokédex
-├── hooks/        # Hooks de dados assíncronos e tradução
+├── components/   # Componentes visuais (cards, modal, desafios, perfil, login, doações...)
+├── context/      # Contextos de idioma, autenticação e da Pokédex
+├── desafios/     # Central de desafios e página de cada modo
+├── entrar/       # Login e cadastro
+├── perfil/       # Edição do perfil
+├── u/[username]/ # Perfil público
+├── apoiar/       # Página de doações
+├── hooks/        # Hooks de dados assíncronos, desafios e tradução
 ├── i18n/         # Textos em português e inglês
-├── lib/          # Cliente da PokeAPI, sprites, gritos, cores dos tipos e tradução
-└── pages/        # Página inicial
+└── lib/          # PokeAPI, Supabase, desafios, progressão, Pix, sprites e gritos
 public/
+├── brand/        # Logo e ícone
 └── regions/      # Fotos de fundo de cada região
+supabase/
+└── migrations/   # Esquema do banco
 ```
 
 ## Créditos

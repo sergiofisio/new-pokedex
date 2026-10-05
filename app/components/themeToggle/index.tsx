@@ -21,7 +21,7 @@ export default function ThemeToggle() {
       aria-label={t('toggleTheme')}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.85 }}
-      className="rounded-lg p-2 text-xl hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
+      className="rounded-lg cursor-pointer p-2 text-xl hover:bg-white/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current"
     >
       <motion.span aria-hidden="true" animate={{ rotate: turns * 360 }} className="block">
         <span className="dark:hidden">🌙</span>

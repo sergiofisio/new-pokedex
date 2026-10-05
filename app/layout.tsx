@@ -5,6 +5,7 @@ import Header from "./components/header";
 import Footer from "./components/footer";
 import { PokedexProvider } from "./context/pokedexContext";
 import { LanguageProvider } from "./context/languageContext";
+import { AuthProvider } from "./context/authContext";
 import MotionProvider from "./components/motionProvider";
 import IntroPokeball from "./components/introPokeball";
 
@@ -42,12 +43,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors">
         <MotionProvider>
           <LanguageProvider>
-            <PokedexProvider>
-              <Header />
-              <main className="flex flex-1 w-full">{children}</main>
-              <Footer />
-              <IntroPokeball />
-            </PokedexProvider>
+            <AuthProvider>
+              <PokedexProvider>
+                <Header />
+                <main className="flex flex-1 w-full">{children}</main>
+                <Footer />
+                <IntroPokeball />
+              </PokedexProvider>
+            </AuthProvider>
           </LanguageProvider>
         </MotionProvider>
       </body>

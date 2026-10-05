@@ -75,7 +75,7 @@ export default function PokedexModal({ speciesId, navigationIds, onClose, onNavi
                     initial={{ opacity: 0, scale: 0.85, y: 40, rotateX: 12 }}
                     animate={{ opacity: 1, scale: 1, y: 0, rotateX: 0 }}
                     transition={{ type: 'spring', stiffness: 220, damping: 22 }}
-                    className="md:h-full [perspective:1200px]"
+                    className="md:h-full perspective-distant"
                 >
                     <PokedexDevice
                         key={speciesId}
@@ -244,7 +244,7 @@ function PokedexDevice({ speciesId, section, onSectionChange, previousId, nextId
 
             <div aria-hidden="true" className="hidden w-5 shrink-0 flex-col py-10 md:flex">
                 <div className="h-6 rounded-t-md border-2 border-red-950 bg-red-700" />
-                <div className="flex-1 border-x-2 border-red-950 bg-gradient-to-r from-red-700 via-orange-400 to-red-700" />
+                <div className="flex-1 border-x-2 border-red-950 bg-linear-to-r from-red-700 via-orange-400 to-red-700" />
                 <div className="h-6 rounded-b-md border-2 border-red-950 bg-red-700" />
             </div>
 
@@ -845,7 +845,7 @@ function EvolutionStep({ details, target, wide, onNavigate }: EvolutionStepProps
             {methods.map((method, index) => (
                 <Fragment key={method.text}>
                     {index > 0 && <span className="text-[9px] uppercase text-zinc-500">{t('evolutionOr')}</span>}
-                    <span className="break-words">
+                    <span className="wrap-break-word">
                         {method.text}
                         {methods.length > 1 && (
                             <span className="block text-[9px] font-bold text-green-300/80">

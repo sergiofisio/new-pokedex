@@ -25,7 +25,7 @@ export default function LanguageToggle() {
             aria-pressed={isActive}
             onClick={() => setLanguage(option.value)}
             whileTap={{ scale: 0.9 }}
-            className={`relative rounded-md px-2 py-1 text-xs font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current ${
+            className={`relative cursor-pointer rounded-md px-2 py-1 text-xs font-bold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-current ${
               isActive ? 'text-red-700' : 'hover:bg-white/20'
             }`}
           >

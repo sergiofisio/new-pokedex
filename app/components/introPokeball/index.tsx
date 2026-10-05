@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
 
@@ -12,7 +13,8 @@ const FALLBACK_DONE_DELAY = 2000
 
 export default function IntroPokeball() {
   const { t } = useLanguage()
-  const [stage, setStage] = useState<Stage>('closed')
+  const pathname = usePathname()
+  const [stage, setStage] = useState<Stage>(() => pathname === '/' ? 'closed' : 'done')
   const isOpening = stage === 'opening'
 
   useEffect(() => {
@@ -24,19 +26,19 @@ export default function IntroPokeball() {
   if (stage === 'done') return null
 
   return (
-    <div data-intro className={`fixed inset-0 z-[100] overflow-hidden ${isOpening ? 'pointer-events-none' : ''}`}>
+    <div data-intro className={`fixed inset-0 z-100 overflow-hidden ${isOpening ? 'pointer-events-none' : ''}`}>
       <motion.div
         aria-hidden="true"
         animate={isOpening ? { y: '-100%' } : { y: 0 }}
         transition={{ delay: SPLIT_DELAY, duration: 0.9, ease: SPLIT_EASE }}
-        className="absolute inset-x-0 top-0 h-1/2 border-b-[14px] border-zinc-900 bg-red-600 bg-[radial-gradient(ellipse_at_30%_20%,rgb(255_255_255/0.35),transparent_55%)] shadow-[inset_0_-30px_60px_rgba(0,0,0,0.25)]"
+        className="absolute inset-x-0 top-0 h-1/2 border-b-14 border-zinc-900 bg-red-600 bg-[radial-gradient(ellipse_at_30%_20%,rgb(255_255_255/0.35),transparent_55%)] shadow-[inset_0_-30px_60px_rgba(0,0,0,0.25)]"
       />
       <motion.div
         aria-hidden="true"
         animate={isOpening ? { y: '100%' } : { y: 0 }}
         transition={{ delay: SPLIT_DELAY, duration: 0.9, ease: SPLIT_EASE }}
         onAnimationComplete={() => { if (isOpening) setStage('done') }}
-        className="absolute inset-x-0 bottom-0 h-1/2 border-t-[14px] border-zinc-900 bg-zinc-100 bg-[radial-gradient(ellipse_at_70%_80%,rgb(0_0_0/0.12),transparent_60%)]"
+        className="absolute inset-x-0 bottom-0 h-1/2 border-t-14 border-zinc-900 bg-zinc-100 bg-[radial-gradient(ellipse_at_70%_80%,rgb(0_0_0/0.12),transparent_60%)]"
       >
         <motion.p
           initial={{ opacity: 0, y: 10 }}
@@ -64,7 +66,7 @@ export default function IntroPokeball() {
           }}
           whileHover={{ scale: 1.08 }}
           whileTap={{ scale: 0.92 }}
-          className="pointer-events-auto flex size-[clamp(7rem,24vmin,13rem)] items-center justify-center rounded-full border-[14px] border-zinc-900 bg-zinc-100 shadow-2xl focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-sky-400"
+          className="pointer-events-auto flex size-[clamp(7rem,24vmin,13rem)] items-center justify-center rounded-full border-14 border-zinc-900 bg-zinc-100 shadow-2xl focus-visible:outline-4 focus-visible:outline-offset-4 focus-visible:outline-sky-400"
         >
           <motion.span
             aria-hidden="true"
@@ -72,7 +74,7 @@ export default function IntroPokeball() {
               ? { backgroundColor: '#ffffff', boxShadow: '0 0 80px 30px rgba(255,255,255,0.9)' }
               : { backgroundColor: ['#e4e4e7', '#ffffff', '#e4e4e7'], boxShadow: '0 0 0 0 rgba(255,255,255,0)' }}
             transition={isOpening ? { duration: 0.3 } : { duration: 1.6, repeat: Infinity }}
-            className="size-1/2 rounded-full border-[6px] border-zinc-900"
+            className="size-1/2 rounded-full border-6 border-zinc-900"
           />
         </motion.button>
       </div>

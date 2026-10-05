@@ -43,4 +43,6 @@ export function getMainSprite(pokemon: PokemonData, shiny = false) {
 
 export const getSpeciesArtwork = (speciesId: number) => `${SPRITES_URL}/pokemon/other/home/${speciesId}.png`
 
+export const getOfficialArtwork = (speciesId: number) => `${SPRITES_URL}/pokemon/other/official-artwork/${speciesId}.png`
+
 export const getItemSprite = (item: string) => `${SPRITES_URL}/items/${item}.png`
