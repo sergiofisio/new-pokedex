@@ -194,9 +194,9 @@ const GENERATION_LAST_IDS = [151, 251, 386, 493, 649, 721, 809, 905, 1025]
 
 export const getGenerationOfId = (id: number) => GENERATION_LAST_IDS.findIndex((last) => id <= last) + 1
 
-export async function fetchSpeciesIdsOfType(type: string) {
-    const data = await cachedGet<{ pokemon: { pokemon: Species }[] }>(`${API_URL}type/${type}/`)
-    return data.pokemon.map(({ pokemon }) => getSpeciesId(pokemon.url))
+export async function fetchSpeciesIdsOfPrimaryType(type: string) {
+    const data = await cachedGet<{ pokemon: { slot: number; pokemon: Species }[] }>(`${API_URL}type/${type}/`)
+    return data.pokemon.filter(({ slot }) => slot === 1).map(({ pokemon }) => getSpeciesId(pokemon.url))
 }
 
 const normalizeSearch = (text: string) => text.toLowerCase().replace(/[^a-z0-9]/g, '')

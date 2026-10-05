@@ -5,7 +5,7 @@ import Image from "next/image";
 import { AnimatePresence, motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
 import { useAsyncData } from "../../hooks/useAsyncData";
-import { POKEMON_TYPES, fetchSpeciesIdsOfType, getGenerationOfId, getSpeciesId, searchSpecies, type Species } from "../../lib/pokeapi";
+import { POKEMON_TYPES, fetchSpeciesIdsOfPrimaryType, getGenerationOfId, getSpeciesId, searchSpecies, type Species } from "../../lib/pokeapi";
 import { getOfficialArtwork } from "../../lib/sprites";
 import { TYPE_COLORS } from "../../lib/typeColors";
 import { prettify } from "../../i18n/translations";
@@ -19,7 +19,7 @@ export interface GuessFilters {
 
 export const NO_FILTERS: GuessFilters = { generation: null, type: null }
 
-const loadTypeIds = (type: string) => type ? fetchSpeciesIdsOfType(type) : Promise.resolve(null)
+const loadTypeIds = (type: string) => type ? fetchSpeciesIdsOfPrimaryType(type) : Promise.resolve(null)
 
 interface GuessInputProps {
     guessed: number[];
@@ -135,18 +135,20 @@ export default function GuessInput({ guessed, onGuess, filters, onFiltersChange,
                         )
                     })}
                 </div>
-                <label className="sr-only" htmlFor={`${id}-type`}>{t('hintTypes')}</label>
-                <select
-                    id={`${id}-type`}
-                    value={filters.type ?? ''}
-                    onChange={(event) => updateFilters({ type: event.target.value || null })}
-                    className={`rounded-lg px-2 py-1.5 text-sm font-bold outline-none ${
-                        filters.type ? `${TYPE_COLORS[filters.type]?.card ?? ''} ${TYPE_COLORS[filters.type]?.text ?? ''}` : 'bg-zinc-100 dark:bg-zinc-800'
-                    }`}
-                >
-                    <option value="">{t('allTypes')}</option>
-                    {POKEMON_TYPES.map((type) => <option key={type} value={type}>{typeName(type)}</option>)}
-                </select>
+                <div className="flex items-center gap-2">
+                    <label htmlFor={`${id}-type`} className="shrink-0 text-xs font-black text-zinc-500">{t('attrType1')}</label>
+                    <select
+                        id={`${id}-type`}
+                        value={filters.type ?? ''}
+                        onChange={(event) => updateFilters({ type: event.target.value || null })}
+                        className={`min-w-0 flex-1 rounded-lg px-2 py-1.5 text-sm font-bold outline-none ${
+                            filters.type ? `${TYPE_COLORS[filters.type]?.card ?? ''} ${TYPE_COLORS[filters.type]?.text ?? ''}` : 'bg-zinc-100 dark:bg-zinc-800'
+                        }`}
+                    >
+                        <option value="">{t('allTypes')}</option>
+                        {POKEMON_TYPES.map((type) => <option key={type} value={type}>{typeName(type)}</option>)}
+                    </select>
+                </div>
             </fieldset>
 
             <AnimatePresence initial={false}>

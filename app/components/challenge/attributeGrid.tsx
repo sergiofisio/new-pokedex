@@ -12,7 +12,7 @@ import { CARD, useChallengeData } from "./shared";
 type Verdict = 'correct' | 'partial' | 'wrong' | 'higher' | 'lower'
 
 const COLUMNS: MessageKey[] = ['attrType1', 'attrType2', 'generation', 'height', 'weight', 'attrColor', 'attrStage']
-const GRID = 'grid grid-cols-[4.5rem_repeat(7,minmax(5.5rem,1fr))] gap-1.5'
+const GRID = 'grid grid-cols-[3.5rem_repeat(7,minmax(0,1fr))] gap-1'
 const FLIP_DELAY = 0.12
 
 const VERDICT_STYLES: Record<Verdict, string> = {
@@ -43,9 +43,9 @@ export default function AttributeGrid({ guesses, target }: { guesses: number[]; 
 
     return (
         <div className={`${CARD} p-3`}>
-            <div className="overflow-x-auto pb-1">
-                <div role="table" className="flex min-w-184 flex-col gap-1.5">
-                    <div role="row" className={`${GRID} text-center text-[11px] font-black uppercase tracking-wide text-zinc-500`}>
+            <div className="overflow-x-auto pb-1 lg:overflow-visible">
+                <div role="table" className="flex min-w-[36rem] flex-col gap-1.5 lg:min-w-0">
+                    <div role="row" className={`${GRID} text-center text-[10px] leading-tight font-black uppercase text-zinc-500`}>
                         <span role="columnheader">Pokémon</span>
                         {COLUMNS.map((column) => <span key={column} role="columnheader">{t(column)}</span>)}
                     </div>
@@ -73,7 +73,7 @@ function AttributeRow({ id, target }: { id: number; target: ChallengeData }) {
         return (
             <div role="row" className={GRID}>
                 {Array.from({ length: COLUMNS.length + 1 }, (_, index) => (
-                    <span key={index} className="h-16 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
+                    <span key={index} className="h-14 animate-pulse rounded-xl bg-zinc-200 dark:bg-zinc-800" />
                 ))}
             </div>
         )
@@ -99,10 +99,10 @@ function AttributeRow({ id, target }: { id: number; target: ChallengeData }) {
                 role="cell"
                 initial={{ scale: 0 }}
                 animate={{ scale: 1 }}
-                className={`relative flex h-16 items-center justify-center rounded-xl ${solved ? 'bg-green-600' : 'bg-zinc-200 dark:bg-zinc-800'}`}
+                className={`relative flex h-14 items-center justify-center rounded-xl ${solved ? 'bg-green-600' : 'bg-zinc-200 dark:bg-zinc-800'}`}
                 title={prettify(guess.name)}
             >
-                <Image src={getOfficialArtwork(guess.id)} alt={prettify(guess.name)} width={56} height={56} className="size-14 object-contain" />
+                <Image src={getOfficialArtwork(guess.id)} alt={prettify(guess.name)} width={56} height={56} className="size-12 object-contain" />
             </motion.span>
             {cells.map(({ verdict, value }, index) => (
                 <motion.span
@@ -111,11 +111,11 @@ function AttributeRow({ id, target }: { id: number; target: ChallengeData }) {
                     initial={{ rotateY: 90, opacity: 0 }}
                     animate={{ rotateY: 0, opacity: 1 }}
                     transition={{ delay: (index + 1) * FLIP_DELAY, duration: 0.35 }}
-                    className={`flex h-16 flex-col items-center justify-center rounded-xl px-1 text-center text-sm font-bold leading-tight shadow ${VERDICT_STYLES[verdict]}`}
+                    className={`flex h-14 min-w-0 flex-col items-center justify-center rounded-xl px-0.5 text-center text-xs font-bold leading-tight break-words shadow ${VERDICT_STYLES[verdict]}`}
                 >
                     {value}
                     {(verdict === 'higher' || verdict === 'lower') && (
-                        <span className="text-lg leading-none">
+                        <span className="text-base leading-none">
                             <span aria-hidden="true">{verdict === 'higher' ? '↑' : '↓'}</span>
                             <span className="sr-only">{t(verdict)}</span>
                         </span>
