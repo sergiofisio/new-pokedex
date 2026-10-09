@@ -8,6 +8,7 @@ import { AuthProvider } from "./context/authContext";
 import MotionProvider from "./components/motionProvider";
 import AdScript from "./components/ads/adScript";
 import { SITE_DESCRIPTION, SITE_NAME } from "./lib/site";
+import { ADSENSE_CLIENT } from "./lib/ads";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -22,6 +23,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
   description: SITE_DESCRIPTION,
+  ...(ADSENSE_CLIENT && { other: { 'google-adsense-account': ADSENSE_CLIENT } }),
 };
 
 const themeScript = `
@@ -39,6 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <AdScript />
       </head>
       <body className="min-h-full flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors">
         <MotionProvider>
@@ -50,7 +53,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             </AuthProvider>
           </LanguageProvider>
         </MotionProvider>
-        <AdScript />
       </body>
     </html>
   );
