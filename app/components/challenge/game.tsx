@@ -26,7 +26,7 @@ export function ChallengeSession(props: SessionProps) {
     return <ClassicSession {...props} />
 }
 
-export default function ChallengeGame({ mode }: { mode: ChallengeMode }) {
+export default function ChallengeGame({ mode, children }: { mode: ChallengeMode; children?: React.ReactNode }) {
     const { t } = useLanguage()
     const { progressVersion } = useAuth()
     const isClient = useIsClient()
@@ -80,6 +80,7 @@ export default function ChallengeGame({ mode }: { mode: ChallengeMode }) {
                 ) : (
                     <p className={`${CARD} p-5`}>{t('challengeLoading')}</p>
                 )}
+                {children}
             </div>
 
             <DetailModal world={world} id={detailId} onClose={() => setDetailId(null)} onNavigate={setDetailId} />

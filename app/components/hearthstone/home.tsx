@@ -29,7 +29,7 @@ const BASICS: { title: MessageKey; text: MessageKey }[] = [
 
 const PANEL = 'rounded-3xl border-2 border-amber-700/40 bg-black/25 p-5 shadow-xl backdrop-blur-sm'
 
-export default function HsHome() {
+export default function HsHome({ children }: { children?: React.ReactNode }) {
     const { t } = useLanguage()
     const state = useHsData()
     const data = state?.status === 'success' ? state.data : null
@@ -101,6 +101,7 @@ export default function HsHome() {
                     </dl>
                 </section>
                 {data && <StandardSets data={data} />}
+                {children}
             </div>
         </div>
     )

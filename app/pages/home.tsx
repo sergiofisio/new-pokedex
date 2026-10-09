@@ -19,7 +19,7 @@ const FADE_IN = { initial: { opacity: 0, y: 10 }, animate: { opacity: 1, y: 0 } 
 
 const loadAllSpecies = () => fetchAllSpecies()
 
-export default function HomePage() {
+export default function HomePage({ children }: { children?: React.ReactNode }) {
     const [selectedGeneration, setSelectedGeneration] = useState(1)
     const [selectedSpeciesId, setSelectedSpeciesId] = useState<number | null>(null)
     const [query, setQuery] = useState('')
@@ -143,6 +143,8 @@ export default function HomePage() {
                     )}
                 </>
             )}
+
+            {children && <div className="px-6 pb-6">{children}</div>}
 
             {generation && (
                 <p className="mt-auto mb-4 mr-6 self-end rounded-full bg-white/85 px-3 py-1 text-[11px] text-zinc-700 shadow dark:bg-zinc-900/85 dark:text-zinc-300">

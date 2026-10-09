@@ -9,6 +9,8 @@ import MotionProvider from "./components/motionProvider";
 import AdScript from "./components/ads/adScript";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./lib/site";
 import { ADSENSE_CLIENT } from "./lib/ads";
+import { OG_IMAGE, SITE_KEYWORDS, websiteJsonLd } from "./lib/seo";
+import JsonLd from "./components/jsonLd";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,11 +22,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const GOOGLE_VERIFICATION = process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+const BING_VERIFICATION = process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
-  openGraph: { siteName: SITE_NAME, locale: 'pt_BR', type: 'website' },
-  twitter: { card: 'summary_large_image' },
+  applicationName: SITE_NAME,
+  keywords: SITE_KEYWORDS,
+  category: 'games',
+  openGraph: { title: SITE_NAME, description: SITE_DESCRIPTION, siteName: SITE_NAME, locale: 'pt_BR', type: 'website', images: [OG_IMAGE] },
+  twitter: { card: 'summary_large_image', title: SITE_NAME, description: SITE_DESCRIPTION, images: [OG_IMAGE.url] },
+  ...((GOOGLE_VERIFICATION || BING_VERIFICATION) && {
+    verification: {
+      ...(GOOGLE_VERIFICATION && { google: GOOGLE_VERIFICATION }),
+      ...(BING_VERIFICATION && { other: { 'msvalidate.01': BING_VERIFICATION } }),
+    },
+  }),
   description: SITE_DESCRIPTION,
   ...(ADSENSE_CLIENT && { other: { 'google-adsense-account': ADSENSE_CLIENT } }),
 };
@@ -47,6 +61,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       </head>
       <body className="min-h-full flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <JsonLd data={websiteJsonLd} />
         <MotionProvider>
           <LanguageProvider>
             <AuthProvider>

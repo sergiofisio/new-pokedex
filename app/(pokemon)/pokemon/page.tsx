@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "../../lib/seo";
 import HomePage from "../../pages/home";
+import PageGuide from "../../components/pageGuide";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "Pokédex",
-  description: "Todos os 1025 Pokémon das 9 gerações, com evoluções, golpes, gritos e fundos de cada região.",
-};
+  description: "Pokédex completa com os 1025 Pokémon das 9 gerações: tipos, estatísticas, evoluções, golpes, descrições e gritos, com os cenários de cada região.",
+  path: "/pokemon",
+});
 
 export default function PokemonPage() {
   return (
     <div className="flex flex-1 font-sans">
-      <HomePage />
+      <HomePage>
+        <PageGuide title="guidePokemonTitle" paragraphs={['guidePokemonP1', 'guidePokemonP2']} />
+      </HomePage>
     </div>
   );
 }

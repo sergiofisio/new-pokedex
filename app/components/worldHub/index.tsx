@@ -46,7 +46,7 @@ function PlayerLevel() {
     return <XpBar info={getLevelInfo(totalXp(readLocalStatsMap()))} compact />
 }
 
-export default function WorldHub() {
+export default function WorldHub({ children }: { children?: React.ReactNode }) {
     const { t } = useLanguage()
 
     return (
@@ -106,6 +106,7 @@ export default function WorldHub() {
                         <p className="mt-1 text-sm text-zinc-300">{t('hubDuelText')}</p>
                     </Link>
                 </motion.section>
+                {children}
             </div>
         </div>
     )

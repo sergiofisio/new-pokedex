@@ -96,7 +96,7 @@ function PlayerProgress({ profileHref }: { profileHref: string | null }) {
     )
 }
 
-export default function ChallengeHub() {
+export default function ChallengeHub({ children }: { children?: React.ReactNode }) {
     const { t } = useLanguage()
     const { user, profile, loading } = useAuth()
     const isClient = useIsClient()
@@ -168,6 +168,7 @@ export default function ChallengeHub() {
                         </motion.div>
                     </Link>
                 </motion.div>
+                {children}
             </div>
         </ChallengeBackdrop>
     )

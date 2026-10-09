@@ -1,0 +1,43 @@
+# Taverna dos Jogos
+
+> Site gratuito em português (com versão em inglês) para fãs de Pokémon e Hearthstone: Pokédex completa com os 1025 Pokémon, biblioteca com todas as cartas colecionáveis de Hearthstone, desafios diários no estilo Wordle (incluindo o Hearthdle), deckbuilder de Hearthstone baseado na coleção do jogador e duelos online entre amigos. Projeto de fã, sem vínculo com a Nintendo, a The Pokémon Company ou a Blizzard Entertainment.
+
+Endereço oficial: https://tavernadosjogos.com.br
+
+## Pokémon
+
+- [Pokédex](https://tavernadosjogos.com.br/pokemon): os 1025 Pokémon das 9 gerações, de Kanto a Paldea, com tipos, estatísticas base, cadeia de evolução, golpes, descrição da Pokédex e grito. Dados da PokéAPI.
+
+## Hearthstone
+
+- [Taverna Hearthstone](https://tavernadosjogos.com.br/hearthstone): visão geral das classes, das coleções do formato Padrão e das regras básicas do jogo.
+- [Biblioteca de cartas](https://tavernadosjogos.com.br/hearthstone/cartas): todas as cartas colecionáveis, com filtros por classe, custo, tipo, raridade, coleção e formato Padrão ou Livre, em português e inglês. Dados do HearthstoneJSON.
+- [Deckbuilder](https://tavernadosjogos.com.br/hearthstone/decks): monta decks, importa e exporta deck codes, mostra curva de mana e custo em pó arcano e lista decks de referência ordenados pelo pó que falta na coleção do jogador, com sugestões de substitutos.
+- [Minha coleção](https://tavernadosjogos.com.br/hearthstone/colecao): o jogador marca as cartas que tem, por coleção inteira, carta a carta ou importando deck codes. A API oficial da Blizzard não fornece a coleção dos jogadores.
+
+## Desafios diários
+
+Todo dia, à meia-noite, cada modo sorteia um novo Pokémon ou carta secreta, igual para todos. As tentativas são ilimitadas e os erros liberam pistas. Cada modo também tem a opção Aleatório, sem limite de partidas.
+
+- [Todos os desafios](https://tavernadosjogos.com.br/desafios)
+- [Silhueta](https://tavernadosjogos.com.br/desafios/silhueta): adivinhe o Pokémon pela sombra.
+- [Descrição](https://tavernadosjogos.com.br/desafios/descricao): adivinhe pelo texto da Pokédex.
+- [Zoom](https://tavernadosjogos.com.br/desafios/zoom): a arte começa ampliada e se revela a cada erro.
+- [Som](https://tavernadosjogos.com.br/desafios/som): reconheça o Pokémon pelo grito.
+- [Fusão](https://tavernadosjogos.com.br/desafios/fusao): descubra os dois Pokémon que formam a fusão.
+- [Ginásio](https://tavernadosjogos.com.br/desafios/ginasio): encontre o Pokémon que não pertence ao ginásio.
+- [Infinito](https://tavernadosjogos.com.br/desafios/infinito): compare tipos, geração, altura, peso, cor e estágio e acerte um Pokémon atrás do outro.
+- [Hearthdle Clássico](https://tavernadosjogos.com.br/desafios/hs-atributos): compare classe, custo, ataque, vida, raridade e coleção até achar a carta de Hearthstone.
+- [Arte da Carta](https://tavernadosjogos.com.br/desafios/hs-arte): descubra a carta pela ilustração ampliada e desfocada.
+- [Texto da Carta](https://tavernadosjogos.com.br/desafios/hs-texto): adivinhe a carta lendo apenas o texto dela.
+
+## Comunidade
+
+- [Duelo](https://tavernadosjogos.com.br/duelo): dois jogadores jogam a mesma série de rodadas de Pokémon ou de Hearthstone, e quem fizer mais pontos vence. Requer conta gratuita.
+- Progressão: cada vitória rende experiência, níveis e insígnias exibidas no perfil público.
+
+## Informações
+
+- [Política de privacidade](https://tavernadosjogos.com.br/privacidade)
+- [Termos de uso](https://tavernadosjogos.com.br/termos)
+- [Apoie o projeto](https://tavernadosjogos.com.br/apoiar): doações via Pix ou Ko-fi.
