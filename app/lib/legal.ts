@@ -12,7 +12,7 @@ export const LEGAL: Record<LegalDoc, Record<Language, LegalSection[]>> = {
             {
                 title: 'Quem somos',
                 paragraphs: [
-                    'A PokéTaverna é um projeto de fã, independente e sem vínculo com a Nintendo, a Game Freak, a The Pokémon Company ou a Blizzard Entertainment. Esta política explica quais dados coletamos, por que e quais são os seus direitos segundo a Lei Geral de Proteção de Dados (LGPD).',
+                    'A Taverna dos Jogos é um projeto de fã, independente e sem vínculo com a Nintendo, a Game Freak, a The Pokémon Company ou a Blizzard Entertainment. Esta política explica quais dados coletamos, por que e quais são os seus direitos segundo a Lei Geral de Proteção de Dados (LGPD).',
                 ],
             },
             {
@@ -53,7 +53,7 @@ export const LEGAL: Record<LegalDoc, Record<Language, LegalSection[]>> = {
             {
                 title: 'Who we are',
                 paragraphs: [
-                    'PokéTaverna is an independent fan project with no ties to Nintendo, Game Freak, The Pokémon Company or Blizzard Entertainment. This policy explains which data we collect, why, and your rights under Brazil\'s General Data Protection Law (LGPD).',
+                    'Taverna dos Jogos is an independent fan project with no ties to Nintendo, Game Freak, The Pokémon Company or Blizzard Entertainment. This policy explains which data we collect, why, and your rights under Brazil\'s General Data Protection Law (LGPD).',
                 ],
             },
             {
@@ -96,7 +96,7 @@ export const LEGAL: Record<LegalDoc, Record<Language, LegalSection[]>> = {
             {
                 title: 'Sobre o site',
                 paragraphs: [
-                    'A PokéTaverna é um projeto de fã gratuito, com Pokédex, biblioteca de cartas de Hearthstone, desafios diários, duelos e deckbuilder. Ao usar o site, você concorda com estes termos.',
+                    'A Taverna dos Jogos é um projeto de fã gratuito, com Pokédex, biblioteca de cartas de Hearthstone, desafios diários, duelos e deckbuilder. Ao usar o site, você concorda com estes termos.',
                 ],
             },
             {
@@ -132,7 +132,7 @@ export const LEGAL: Record<LegalDoc, Record<Language, LegalSection[]>> = {
             {
                 title: 'About the site',
                 paragraphs: [
-                    'PokéTaverna is a free fan project with a Pokédex, a Hearthstone card library, daily challenges, duels and a deckbuilder. By using the site, you agree to these terms.',
+                    'Taverna dos Jogos is a free fan project with a Pokédex, a Hearthstone card library, daily challenges, duels and a deckbuilder. By using the site, you agree to these terms.',
                 ],
             },
             {

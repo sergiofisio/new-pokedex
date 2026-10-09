@@ -1,5 +1,5 @@
-export const SITE_NAME = 'PokéTaverna'
-export const SITE_DESCRIPTION = 'Pokédex, biblioteca de cartas de Hearthstone, desafios diários, Hearthdle e duelos entre treinadores.'
+export const SITE_NAME = 'Taverna dos Jogos'
+export const SITE_DESCRIPTION = 'Pokédex, biblioteca de cartas de Hearthstone, desafios diários, Hearthdle, deckbuilder e duelos entre jogadores.'
 
 export type World = 'pokemon' | 'hearthstone' | 'neutral'
 
