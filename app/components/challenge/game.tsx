@@ -3,11 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import PokedexModal from "../pokedexModal";
 import { useLanguage } from "../../context/languageContext";
 import { useAuth } from "../../context/authContext";
 import { useIsClient } from "../../hooks/useIsClient";
-import { getDateKey, getSessionKind, supportsDaily, type ChallengeMode, type ChallengeVariant } from "../../lib/challenge";
+import { getDateKey, getModeWorld, getSessionKind, supportsDaily, type ChallengeMode, type ChallengeVariant } from "../../lib/challenge";
 import ChallengeBackdrop from "./backdrop";
 import VariantToggle from "./variantToggle";
 import { MODE_META, ModeIcon } from "./modes";
@@ -15,14 +14,15 @@ import { CARD } from "./shared";
 import ClassicSession from "./sessions/classic";
 import FusionSession from "./sessions/fusion";
 import GymSession from "./sessions/gym";
+import CardSession from "./sessions/card";
+import DetailModal from "./detailModal";
 import type { SessionProps } from "./sessions/common";
-
-const NO_NAVIGATION: number[] = []
 
 export function ChallengeSession(props: SessionProps) {
     const kind = getSessionKind(props.mode)
     if (kind === 'fusion') return <FusionSession {...props} />
     if (kind === 'gym') return <GymSession {...props} />
+    if (kind === 'card') return <CardSession {...props} />
     return <ClassicSession {...props} />
 }
 
@@ -34,11 +34,12 @@ export default function ChallengeGame({ mode }: { mode: ChallengeMode }) {
     const [variant, setVariant] = useState<ChallengeVariant>(daily ? 'daily' : 'random')
     const [round, setRound] = useState(0)
     const [dateKey, setDateKey] = useState(getDateKey)
-    const [pokedexId, setPokedexId] = useState<number | null>(null)
+    const [detailId, setDetailId] = useState<number | null>(null)
     const meta = MODE_META[mode]
+    const world = getModeWorld(mode)
 
     return (
-        <ChallengeBackdrop generation={meta.generation}>
+        <ChallengeBackdrop generation={meta.generation} world={world}>
             <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6">
                 <Link
                     href="/desafios"
@@ -74,19 +75,14 @@ export default function ChallengeGame({ mode }: { mode: ChallengeMode }) {
                         dateKey={dateKey}
                         onNextRound={() => setRound((value) => value + 1)}
                         onNewDay={() => setDateKey(getDateKey())}
-                        onShowPokedex={setPokedexId}
+                        onShowDetail={setDetailId}
                     />
                 ) : (
                     <p className={`${CARD} p-5`}>{t('challengeLoading')}</p>
                 )}
             </div>
 
-            <PokedexModal
-                speciesId={pokedexId}
-                navigationIds={NO_NAVIGATION}
-                onClose={() => setPokedexId(null)}
-                onNavigate={setPokedexId}
-            />
+            <DetailModal world={world} id={detailId} onClose={() => setDetailId(null)} onNavigate={setDetailId} />
         </ChallengeBackdrop>
     )
 }

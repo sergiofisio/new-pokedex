@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import AuthPage from "../components/auth/authPage";
 
 export const metadata: Metadata = {
-  title: "Entrar · Pokedex",
+  title: "Entrar",
 };
 
 export default function SignInPage() {

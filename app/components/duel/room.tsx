@@ -3,10 +3,10 @@
 import { useRef, useState } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
-import PokedexModal from "../pokedexModal";
+import DetailModal from "../challenge/detailModal";
 import { useLanguage } from "../../context/languageContext";
 import { useAsyncData } from "../../hooks/useAsyncData";
-import { getDateKey } from "../../lib/challenge";
+import { getDateKey, getModeWorld, type GameWorld } from "../../lib/challenge";
 import { fetchDuel, saveDuelResult, scoreRound, type Duel, type DuelRoundResult } from "../../lib/duel";
 import type { RoundResult } from "../../hooks/useChallenge";
 import ChallengeBackdrop from "../challenge/backdrop";
@@ -16,19 +16,22 @@ import { CARD } from "../challenge/shared";
 import { DuelGate, DuelPanel, RoundAnswer, Scoreboard, ShareButton, type DuelViewProps } from "./shared";
 import LiveDuel from "./live";
 
-const NO_NAVIGATION: number[] = []
-
 const loadDuel = (key: string) => fetchDuel(key.split(':')[0])
 
 export default function DuelRoom({ code }: { code: string }) {
-    const [pokedexId, setPokedexId] = useState<number | null>(null)
+    const [detail, setDetail] = useState<{ world: GameWorld; id: number | null }>({ world: 'pokemon', id: null })
 
     return (
         <ChallengeBackdrop generation={6}>
             <DuelGate>
-                {(userId, playerName) => <DuelLoader code={code} userId={userId} playerName={playerName} onShowPokedex={setPokedexId} />}
+                {(userId, playerName) => <DuelLoader code={code} userId={userId} playerName={playerName} onShowDetail={(world, id) => setDetail({ world, id })} />}
             </DuelGate>
-            <PokedexModal speciesId={pokedexId} navigationIds={NO_NAVIGATION} onClose={() => setPokedexId(null)} onNavigate={setPokedexId} />
+            <DetailModal
+                world={detail.world}
+                id={detail.id}
+                onClose={() => setDetail((current) => ({ ...current, id: null }))}
+                onNavigate={(id) => setDetail((current) => ({ ...current, id }))}
+            />
         </ChallengeBackdrop>
     )
 }
@@ -37,10 +40,10 @@ interface DuelLoaderProps {
     code: string;
     userId: string;
     playerName: string;
-    onShowPokedex: (id: number) => void;
+    onShowDetail: (world: GameWorld, id: number) => void;
 }
 
-function DuelLoader({ code, userId, playerName, onShowPokedex }: DuelLoaderProps) {
+function DuelLoader({ code, userId, playerName, onShowDetail }: DuelLoaderProps) {
     const { t } = useLanguage()
     const [version, setVersion] = useState(0)
     const result = useAsyncData(`${code}:${version}`, loadDuel)
@@ -59,7 +62,7 @@ function DuelLoader({ code, userId, playerName, onShowPokedex }: DuelLoaderProps
         )
     }
 
-    const props: DuelViewProps = { duel, userId, playerName, onReload: () => setVersion((value) => value + 1), onShowPokedex }
+    const props: DuelViewProps = { duel, userId, playerName, onReload: () => setVersion((value) => value + 1), onShowDetail: (id: number) => onShowDetail(getModeWorld(duel.mode), id) }
     return (
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-5 px-4 py-6">
             <DuelHeader duel={duel} />
@@ -116,7 +119,7 @@ function readRoundStart(code: string, index: number) {
     }
 }
 
-function AsyncDuel({ duel, userId, playerName, onReload, onShowPokedex }: DuelViewProps) {
+function AsyncDuel({ duel, userId, playerName, onReload, onShowDetail }: DuelViewProps) {
     const { t } = useLanguage()
     const mine = duel.duel_results.find((result) => result.user_id === userId)
     const [results, setResults] = useState<DuelRoundResult[]>(() => readProgress(duel.code))
@@ -233,7 +236,7 @@ function AsyncDuel({ duel, userId, playerName, onReload, onShowPokedex }: DuelVi
                 dateKey={dateKey}
                 onNextRound={() => undefined}
                 onNewDay={() => undefined}
-                onShowPokedex={onShowPokedex}
+                onShowDetail={onShowDetail}
                 series={{ target: duel.rounds[index], onFinish: finishRound }}
             />
         </>

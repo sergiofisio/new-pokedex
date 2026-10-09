@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "motion/react";
 import PokemonCard from "../components/pokemonCard";
 import PokedexModal from "../components/pokedexModal";
 import SearchBar from "../components/searchBar";
+import AdSlot from "../components/ads/adSlot";
 import GenerationMenu, { GENERATIONS, getBackgroundSourceUrl } from "../components/generationMenu";
 import { usePokedex } from "../context/pokedexContext";
 import { useLanguage } from "../context/languageContext";
@@ -134,6 +135,7 @@ export default function HomePage() {
                             ))}
                         </AnimatePresence>
                     </ul>
+                    <AdSlot className="px-6 pb-6" />
                     {isSearching && matches.length > SEARCH_LIMIT && (
                         <motion.p {...FADE_IN} className="mx-auto mb-6 w-fit rounded-full bg-white/90 px-4 py-1.5 text-center text-sm text-zinc-700 shadow-md dark:bg-zinc-900/90 dark:text-zinc-300">
                             {t('searchLimited', { shown: SEARCH_LIMIT, count: matches.length })}

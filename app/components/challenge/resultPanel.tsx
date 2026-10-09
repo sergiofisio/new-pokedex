@@ -5,7 +5,7 @@ import Image from "next/image";
 import { motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
 import Link from "next/link";
-import { formatCountdown, getDateKey, getNextMode, msUntilTomorrow, type ChallengeMode, type ChallengeStats, type ChallengeVariant } from "../../lib/challenge";
+import { formatCountdown, getDateKey, getModeWorld, getNextMode, msUntilTomorrow, type ChallengeMode, type ChallengeStats, type ChallengeVariant } from "../../lib/challenge";
 import { MODE_META, ModeIcon } from "./modes";
 import { getOfficialArtwork } from "../../lib/sprites";
 import type { ChallengeStatus } from "../../hooks/useChallenge";
@@ -29,10 +29,10 @@ interface ResultPanelProps {
     variant: ChallengeVariant;
     onNext: () => void;
     onNewDay: () => void;
-    onShowPokedex: (id: number) => void;
+    onShowDetail: (id: number) => void;
 }
 
-export default function ResultPanel({ mode, status, answer, attempts, stats, reward, variant, onNext, onNewDay, onShowPokedex }: ResultPanelProps) {
+export default function ResultPanel({ mode, status, answer, attempts, stats, reward, variant, onNext, onNewDay, onShowDetail }: ResultPanelProps) {
     const { t } = useLanguage()
     const getName = useSpeciesName()
     const won = status === 'won'
@@ -40,6 +40,8 @@ export default function ResultPanel({ mode, status, answer, attempts, stats, rew
     const average = stats.wins ? (stats.totalAttempts / stats.wins).toFixed(1) : '-'
     const maxBucket = Math.max(1, ...stats.distribution)
     const [nextMode] = useState(() => getNextMode(mode, getDateKey()))
+    const isCard = getModeWorld(mode) === 'hearthstone'
+    const viewLabel = t(isCard ? 'viewCard' : 'viewInPokedex')
 
     const summary = [
         { label: t('statsWins'), value: stats.wins },
@@ -118,12 +120,12 @@ export default function ResultPanel({ mode, status, answer, attempts, stats, rew
                     <motion.button
                         key={id}
                         type="button"
-                        onClick={() => onShowPokedex(id)}
+                        onClick={() => onShowDetail(id)}
                         whileHover={{ scale: 1.04 }}
                         whileTap={{ scale: 0.95 }}
                         className="rounded-xl bg-zinc-900 px-4 py-2 font-bold text-white dark:bg-white dark:text-zinc-900"
                     >
-                        {answer.ids.length > 1 ? `${t('viewInPokedex')}: ${getName(id)}` : t('viewInPokedex')}
+                        {answer.ids.length > 1 ? `${viewLabel}: ${getName(id)}` : viewLabel}
                     </motion.button>
                 ))}
                 {variant === 'random' ? (
@@ -135,7 +137,7 @@ export default function ResultPanel({ mode, status, answer, attempts, stats, rew
                         whileTap={{ scale: 0.95 }}
                         className="rounded-xl bg-red-600 px-4 py-2 font-bold text-white"
                     >
-                        {t('newPokemon')}
+                        {t(isCard ? 'newCard' : 'newPokemon')}
                     </motion.button>
                 ) : (
                     <Countdown onNewDay={onNewDay} />

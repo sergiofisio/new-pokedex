@@ -11,7 +11,7 @@ import { CARD, useSpeciesName } from "../shared";
 import { PlayBar, SessionEnd, SessionLayout, type SessionProps } from "./common";
 
 export default function GymSession(session: SessionProps) {
-    const { mode, variant, dateKey, series, onShowPokedex } = session
+    const { mode, variant, dateKey, series, onShowDetail } = session
     const { t, typeName } = useLanguage()
     const getName = useSpeciesName()
     const { target, guesses, attempts, status, stats, reward, guess, giveUp } = useChallenge(mode, variant, dateKey, series)
@@ -111,7 +111,7 @@ export default function GymSession(session: SessionProps) {
                     <p className="font-bold">
                         {t('gymExplanation', { name: getName(intruder), types: typesLabel(intruder), type: typeName(gym.type) })}
                     </p>
-                    <button type="button" onClick={() => onShowPokedex(intruder)} className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-white dark:bg-white dark:text-zinc-900">
+                    <button type="button" onClick={() => onShowDetail(intruder)} className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-bold text-white dark:bg-white dark:text-zinc-900">
                         {t('viewInPokedex')}
                     </button>
                 </motion.div>

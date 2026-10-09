@@ -8,6 +8,7 @@ import type { Reward } from "../../../lib/progression";
 import type { ChallengeStatus, SeriesRound } from "../../../hooks/useChallenge";
 import ResultPanel, { type ChallengeAnswer } from "../resultPanel";
 import { CARD } from "../shared";
+import AdSlot from "../../ads/adSlot";
 
 export interface SessionProps {
     mode: ChallengeMode;
@@ -15,7 +16,7 @@ export interface SessionProps {
     dateKey: string;
     onNextRound: () => void;
     onNewDay: () => void;
-    onShowPokedex: (id: number) => void;
+    onShowDetail: (id: number) => void;
     series?: SeriesRound;
     renderEnd?: (status: Exclude<ChallengeStatus, 'playing'>, answer: ChallengeAnswer) => ReactNode;
 }
@@ -73,6 +74,7 @@ interface SessionEndProps {
 export function SessionEnd({ session, status, answer, attempts, stats, reward }: SessionEndProps) {
     if (session.series) return session.renderEnd?.(status, answer) ?? null
     return (
+        <>
         <ResultPanel
             mode={session.mode}
             status={status}
@@ -83,8 +85,10 @@ export function SessionEnd({ session, status, answer, attempts, stats, reward }:
             variant={session.variant}
             onNext={session.onNextRound}
             onNewDay={session.onNewDay}
-            onShowPokedex={session.onShowPokedex}
+            onShowDetail={session.onShowDetail}
         />
+        <AdSlot />
+        </>
     )
 }
 
@@ -95,7 +99,7 @@ export function SessionError({ canRetry, onRetry }: { canRetry: boolean; onRetry
             {t('challengeError')}
             {canRetry && (
                 <button type="button" onClick={onRetry} className="rounded-xl bg-red-600 px-4 py-2 font-bold text-white">
-                    {t('newPokemon')}
+                    {t('tryAnother')}
                 </button>
             )}
         </div>

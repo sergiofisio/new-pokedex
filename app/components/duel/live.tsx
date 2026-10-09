@@ -64,7 +64,7 @@ const addScores = (totals: Scores, points: Scores) =>
     Object.fromEntries([...new Set([...Object.keys(totals), ...Object.keys(points)])]
         .map((userId) => [userId, (totals[userId] ?? 0) + (points[userId] ?? 0)]))
 
-export default function LiveDuel({ duel, userId, playerName, onReload, onShowPokedex }: DuelViewProps) {
+export default function LiveDuel({ duel, userId, playerName, onReload, onShowDetail }: DuelViewProps) {
     const { t } = useLanguage()
     const isHost = duel.created_by === userId
     const rounds = duel.rounds.length
@@ -309,7 +309,7 @@ export default function LiveDuel({ duel, userId, playerName, onReload, onShowPok
                         dateKey={dateKey}
                         onNextRound={() => undefined}
                         onNewDay={() => undefined}
-                        onShowPokedex={onShowPokedex}
+                        onShowDetail={onShowDetail}
                         series={{
                             target: duel.rounds[index],
                             onFinish: finishRound,

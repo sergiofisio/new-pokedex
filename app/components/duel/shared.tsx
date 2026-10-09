@@ -6,10 +6,13 @@ import Link from "next/link";
 import { motion } from "motion/react";
 import { useAuth } from "../../context/authContext";
 import { useLanguage } from "../../context/languageContext";
-import { getSolution, type ChallengeMode } from "../../lib/challenge";
+import { getModeWorld, getSolution, type ChallengeMode } from "../../lib/challenge";
 import { shareDuel, type Duel, type DuelResult } from "../../lib/duel";
 import { getOfficialArtwork } from "../../lib/sprites";
 import { CARD, useSpeciesName } from "../challenge/shared";
+import { useHsData } from "../hearthstone/data";
+import { HsCardImage } from "../hearthstone/cardImage";
+import { cardName } from "../../lib/hearthstone";
 
 export function DuelGate({ children }: { children: (userId: string, playerName: string) => ReactNode }) {
     const { t } = useLanguage()
@@ -100,10 +103,28 @@ export interface DuelViewProps {
     userId: string;
     playerName: string;
     onReload: () => void;
-    onShowPokedex: (id: number) => void;
+    onShowDetail: (id: number) => void;
 }
 
 export function RoundAnswer({ mode, target }: { mode: ChallengeMode; target: number }) {
+    if (getModeWorld(mode) === 'hearthstone') return <CardRoundAnswer dbfId={getSolution(mode, target)[0]} />
+    return <PokemonRoundAnswer mode={mode} target={target} />
+}
+
+function CardRoundAnswer({ dbfId }: { dbfId: number }) {
+    const { language } = useLanguage()
+    const state = useHsData()
+    const card = state?.status === 'success' ? state.data.byDbf.get(dbfId) : undefined
+    if (!card) return null
+    return (
+        <span className="flex items-center justify-center gap-3 font-black">
+            <span className="w-14"><HsCardImage card={card} /></span>
+            {cardName(card, language)}
+        </span>
+    )
+}
+
+function PokemonRoundAnswer({ mode, target }: { mode: ChallengeMode; target: number }) {
     const getName = useSpeciesName()
     const ids = getSolution(mode, target)
     return (

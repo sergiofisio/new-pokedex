@@ -7,7 +7,7 @@ type Props = { params: Promise<{ code: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { code } = await params;
-  return { title: `Duelo ${normalizeCode(code)} · Pokedex` };
+  return { title: `Duelo ${normalizeCode(code)}` };
 }
 
 export default async function DuelRoomPage({ params }: Props) {

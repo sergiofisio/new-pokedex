@@ -14,7 +14,7 @@ const FALLBACK_DONE_DELAY = 2000
 export default function IntroPokeball() {
   const { t } = useLanguage()
   const pathname = usePathname()
-  const [stage, setStage] = useState<Stage>(() => pathname === '/' ? 'closed' : 'done')
+  const [stage, setStage] = useState<Stage>(() => pathname === '/pokemon' ? 'closed' : 'done')
   const isOpening = stage === 'opening'
 
   useEffect(() => {

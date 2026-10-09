@@ -1,4 +1,4 @@
-import { CHALLENGE_MODES, readStats, type ChallengeMode, type ChallengeStats, type ChallengeVariant } from "./challenge";
+import { CHALLENGE_MODES, POKEMON_MODES, getModeWorld, readStats, type ChallengeMode, type ChallengeStats, type ChallengeVariant } from "./challenge";
 import type { MessageKey } from "../i18n/translations";
 
 export type StatsMap = Record<ChallengeMode, Partial<Record<ChallengeVariant, ChallengeStats>>>
@@ -80,6 +80,7 @@ interface Totals {
     bestDailyStreak: number;
     bestRandomStreak: number;
     winsByMode: Record<ChallengeMode, number>;
+    worldsPlayed: number;
 }
 
 function getTotals(map: StatsMap): Totals {
@@ -93,10 +94,11 @@ function getTotals(map: StatsMap): Totals {
     return {
         wins: list.reduce((sum, { stats }) => sum + (stats.wins ?? 0), 0),
         firstTry: list.reduce((sum, { stats }) => sum + (stats.distribution?.[0] ?? 0), 0),
-        modesPlayed: CHALLENGE_MODES.filter((mode) => winsByMode[mode] > 0).length,
+        modesPlayed: POKEMON_MODES.filter((mode) => winsByMode[mode] > 0).length,
         bestDailyStreak: bestStreak('daily'),
         bestRandomStreak: bestStreak('random'),
         winsByMode,
+        worldsPlayed: new Set(CHALLENGE_MODES.filter((mode) => winsByMode[mode] > 0).map(getModeWorld)).size,
     }
 }
 
@@ -117,7 +119,7 @@ const BADGES: BadgeDefinition[] = [
     { id: 'wins100', icon: '🥇', tier: 'gold', target: 100, value: (t) => t.wins },
     { id: 'firstTry', icon: '🎯', tier: 'bronze', target: 1, value: (t) => t.firstTry },
     { id: 'firstTry10', icon: '🦅', tier: 'gold', target: 10, value: (t) => t.firstTry },
-    { id: 'explorer', icon: '🧭', tier: 'silver', target: CHALLENGE_MODES.length, value: (t) => t.modesPlayed },
+    { id: 'explorer', icon: '🧭', tier: 'silver', target: POKEMON_MODES.length, value: (t) => t.modesPlayed },
     { id: 'daily7', icon: '📅', tier: 'silver', target: 7, value: (t) => t.bestDailyStreak },
     { id: 'daily30', icon: '🔥', tier: 'gold', target: 30, value: (t) => t.bestDailyStreak },
     { id: 'endless10', icon: '♾️', tier: 'silver', target: 10, value: (t) => t.bestRandomStreak },
@@ -128,6 +130,10 @@ const BADGES: BadgeDefinition[] = [
     { id: 'somMaster', icon: '🎧', tier: 'gold', target: 25, value: (t) => t.winsByMode.som },
     { id: 'fusaoMaster', icon: '🧬', tier: 'gold', target: 25, value: (t) => t.winsByMode.fusao },
     { id: 'ginasioMaster', icon: '🏟️', tier: 'gold', target: 25, value: (t) => t.winsByMode.ginasio },
+    { id: 'hsAtributosMaster', icon: '🃏', tier: 'gold', target: 25, value: (t) => t.winsByMode['hs-atributos'] },
+    { id: 'hsArteMaster', icon: '🎨', tier: 'gold', target: 25, value: (t) => t.winsByMode['hs-arte'] },
+    { id: 'hsTextoMaster', icon: '📜', tier: 'gold', target: 25, value: (t) => t.winsByMode['hs-texto'] },
+    { id: 'bothWorlds', icon: '🌗', tier: 'silver', target: 2, value: (t) => t.worldsPlayed },
 ]
 
 export interface Badge {

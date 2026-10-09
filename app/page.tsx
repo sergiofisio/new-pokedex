@@ -1,9 +1,5 @@
-import HomePage from "./pages/home";
+import WorldHub from "./components/worldHub";
 
 export default function Home() {
-  return (
-    <div className="flex flex-1 font-sans">
-     <HomePage />
-    </div>
-  );
+  return <WorldHub />;
 }

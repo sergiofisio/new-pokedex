@@ -9,6 +9,9 @@ export const MODE_META: Record<ChallengeMode, { title: MessageKey; description: 
     fusao: { title: 'modeFusao', description: 'modeFusaoDesc', generation: 5, accent: 'bg-fuchsia-600' },
     ginasio: { title: 'modeGinasio', description: 'modeGinasioDesc', generation: 1, accent: 'bg-emerald-600' },
     infinito: { title: 'modeInfinito', description: 'modeInfinitoDesc', generation: 8, accent: 'bg-violet-600' },
+    'hs-atributos': { title: 'modeHsAtributos', description: 'modeHsAtributosDesc', generation: 0, accent: 'bg-linear-to-br from-amber-600 to-amber-900' },
+    'hs-arte': { title: 'modeHsArte', description: 'modeHsArteDesc', generation: 0, accent: 'bg-linear-to-br from-sky-700 to-indigo-950' },
+    'hs-texto': { title: 'modeHsTexto', description: 'modeHsTextoDesc', generation: 0, accent: 'bg-linear-to-br from-emerald-700 to-stone-900' },
 }
 
 export function ModeIcon({ mode, className = 'size-10' }: { mode: ChallengeMode; className?: string }) {
@@ -57,6 +60,29 @@ export function ModeIcon({ mode, className = 'size-10' }: { mode: ChallengeMode;
                     <path d="M3 10 12 4l9 6" />
                     <path d="M5 10v9h14v-9" />
                     <path d="M9 19v-5h6v5" fill="currentColor" fillOpacity="0.25" />
+                </svg>
+            )
+        case 'hs-atributos':
+            return (
+                <svg {...common}>
+                    <rect x="5" y="3" width="14" height="18" rx="2" fill="currentColor" fillOpacity="0.2" />
+                    <circle cx="7.5" cy="5.5" r="2.5" fill="currentColor" fillOpacity="0.5" />
+                    <path d="M9 15l1.5 1.5L13 13M15 13l2 2m0-2-2 2" />
+                </svg>
+            )
+        case 'hs-arte':
+            return (
+                <svg {...common}>
+                    <path d="M12 3 20 7.5v9L12 21l-8-4.5v-9Z" fill="currentColor" fillOpacity="0.2" />
+                    <path d="m7 15 3-3.5 2.5 2.5 1.5-1.5 3 2.5" />
+                    <circle cx="14.5" cy="9" r="1.2" fill="currentColor" />
+                </svg>
+            )
+        case 'hs-texto':
+            return (
+                <svg {...common}>
+                    <path d="M5 5c3-2 11-2 14 0v14c-3-2-11-2-14 0Z" fill="currentColor" fillOpacity="0.2" />
+                    <path d="M8.5 9h7M8.5 12.5h7M8.5 16h4" />
                 </svg>
             )
         case 'infinito':

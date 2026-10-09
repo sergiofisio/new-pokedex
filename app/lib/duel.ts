@@ -2,7 +2,7 @@ import { getSupabase } from "./supabase";
 import { getRandomTarget, isChallengeMode, type ChallengeMode } from "./challenge";
 
 export const DUEL_ROUNDS = 5
-export const DUEL_MODES: ChallengeMode[] = ['silhueta', 'descricao', 'zoom', 'som', 'fusao', 'ginasio']
+export const DUEL_MODES: ChallengeMode[] = ['silhueta', 'descricao', 'zoom', 'som', 'fusao', 'ginasio', 'hs-atributos', 'hs-arte', 'hs-texto']
 export const LIVE_ROUND_SECONDS = 60
 export const LIVE_COUNTDOWN_SECONDS = 3
 

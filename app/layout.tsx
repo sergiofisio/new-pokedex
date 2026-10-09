@@ -3,11 +3,11 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Header from "./components/header";
 import Footer from "./components/footer";
-import { PokedexProvider } from "./context/pokedexContext";
 import { LanguageProvider } from "./context/languageContext";
 import { AuthProvider } from "./context/authContext";
 import MotionProvider from "./components/motionProvider";
-import IntroPokeball from "./components/introPokeball";
+import AdScript from "./components/ads/adScript";
+import { SITE_DESCRIPTION, SITE_NAME } from "./lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -20,8 +20,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Pokedex",
-  description: "Pokedex is a web application that allows you to search for Pokémon by name or number.",
+  title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
+  description: SITE_DESCRIPTION,
 };
 
 const themeScript = `
@@ -44,15 +44,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <MotionProvider>
           <LanguageProvider>
             <AuthProvider>
-              <PokedexProvider>
-                <Header />
-                <main className="flex flex-1 w-full">{children}</main>
-                <Footer />
-                <IntroPokeball />
-              </PokedexProvider>
+              <Header />
+              <main className="flex flex-1 w-full">{children}</main>
+              <Footer />
             </AuthProvider>
           </LanguageProvider>
         </MotionProvider>
+        <AdScript />
       </body>
     </html>
   );

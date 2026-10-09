@@ -4,10 +4,20 @@ import type { ReactNode } from "react";
 import { motion } from "motion/react";
 import { GENERATIONS, getBackgroundSourceUrl } from "../generationMenu";
 import { useLanguage } from "../../context/languageContext";
+import type { GameWorld } from "../../lib/challenge";
+import Tavern from "../hearthstone/tavern";
 
-export default function ChallengeBackdrop({ generation, children }: { generation: number; children: ReactNode }) {
+export default function ChallengeBackdrop({ generation, world = 'pokemon', children }: { generation: number; world?: GameWorld; children: ReactNode }) {
     const { t } = useLanguage()
     const region = GENERATIONS.find(({ id }) => id === generation) ?? GENERATIONS[0]
+
+    if (world === 'hearthstone') {
+        return (
+            <Tavern className="text-zinc-900 dark:text-zinc-100">
+                <section className="flex min-w-0 flex-1 flex-col">{children}</section>
+            </Tavern>
+        )
+    }
 
     return (
         <section className="relative isolate flex min-w-0 flex-1 flex-col">

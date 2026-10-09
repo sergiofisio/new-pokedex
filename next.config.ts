@@ -13,6 +13,11 @@ const nextConfig: NextConfig = {
         hostname: 'bitbucket.org',
         pathname: '/infinitefusionsprites/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'art.hearthstonejson.com',
+        pathname: '/v1/**',
+      },
     ],
   },
 };

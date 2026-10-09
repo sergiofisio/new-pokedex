@@ -3,6 +3,9 @@
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
+import { SITE_NAME } from "../../lib/site";
+import ConsentButton from "../ads/consentButton";
+import { ADSENSE_CLIENT } from "../../lib/ads";
 
 export default function Footer() {
   const { t } = useLanguage()
@@ -10,7 +13,15 @@ export default function Footer() {
   return (
     <footer className="w-full bg-zinc-50 dark:bg-zinc-950">
       <div className="container mx-auto flex min-h-16 flex-wrap items-center justify-between gap-3 px-4 py-3">
-        <p className="text-sm text-zinc-500 dark:text-zinc-400">© 2026 Pokedex · {t('footerFanProject')}</p>
+        <div className="flex max-w-3xl flex-col gap-1 text-sm text-zinc-500 dark:text-zinc-400">
+          <p>
+            © 2026 {SITE_NAME} · {t('footerFanProject')} ·{' '}
+            <Link href="/privacidade" className="underline-offset-2 hover:underline">{t('privacyTitle')}</Link> ·{' '}
+            <Link href="/termos" className="underline-offset-2 hover:underline">{t('termsTitle')}</Link>
+            {ADSENSE_CLIENT && <> · <ConsentButton /></>}
+          </p>
+          <p className="text-xs">{t('footerTrademarks')}</p>
+        </div>
         <motion.span whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
           <Link
             href="/apoiar"

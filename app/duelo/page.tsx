@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import DuelLobby from "../components/duel/lobby";
 
 export const metadata: Metadata = {
-  title: "Duelo · Pokedex",
+  title: "Duelo",
   description: "Desafie outro treinador: a mesma série de desafios, quem fizer mais pontos vence.",
 };
 
