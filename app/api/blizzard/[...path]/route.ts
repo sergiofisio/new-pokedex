@@ -53,7 +53,7 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
       headers: { Authorization: `Bearer ${await getToken(id, secret)}` },
       next: { revalidate: route.revalidate },
     })
-    if (!response.ok) return Response.json({ error: 'upstream', status: response.status }, { status: response.status === 404 ? 404 : 502 })
+    if (!response.ok) return Response.json({ error: 'upstream', status: response.status }, { status: response.status === 400 || response.status === 404 ? response.status : 502 })
     return Response.json(await response.json(), {
       headers: { 'Cache-Control': `public, s-maxage=${route.revalidate}, stale-while-revalidate=${route.revalidate}` },
     })
