@@ -5,8 +5,7 @@ import { usePathname } from "next/navigation";
 import ThemeToggle from "../themeToggle";
 import LanguageToggle from "../languageToggle";
 import MainNav from "../mainNav";
-import Pokeball from "../pokeball";
-import HsEmblem from "../hsEmblem";
+import SiteEmblem from "../siteEmblem";
 import UserMenu from "../userMenu";
 import { SITE_NAME, getWorld, type World } from "../../lib/site";
 
@@ -24,8 +23,7 @@ export default function Header() {
       <div className="container mx-auto flex h-16 items-center justify-between gap-3">
         <h1 className="shrink-0 text-2xl font-black tracking-tight">
           <Link href="/" className="flex items-center gap-2">
-            {world !== 'hearthstone' && <Pokeball />}
-            {world !== 'pokemon' && <HsEmblem className="size-9" />}
+            <SiteEmblem className="size-10 drop-shadow-md" />
             <span className="whitespace-nowrap max-lg:sr-only">{SITE_NAME}</span>
           </Link>
         </h1>

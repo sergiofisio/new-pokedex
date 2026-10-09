@@ -7,7 +7,7 @@ import { LanguageProvider } from "./context/languageContext";
 import { AuthProvider } from "./context/authContext";
 import MotionProvider from "./components/motionProvider";
 import AdScript from "./components/ads/adScript";
-import { SITE_DESCRIPTION, SITE_NAME } from "./lib/site";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./lib/site";
 import { ADSENSE_CLIENT } from "./lib/ads";
 
 const geistSans = Geist({
@@ -21,7 +21,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: { default: SITE_NAME, template: `%s · ${SITE_NAME}` },
+  openGraph: { siteName: SITE_NAME, locale: 'pt_BR', type: 'website' },
+  twitter: { card: 'summary_large_image' },
   description: SITE_DESCRIPTION,
   ...(ADSENSE_CLIENT && { other: { 'google-adsense-account': ADSENSE_CLIENT } }),
 };
@@ -40,10 +43,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <AdScript />
       </head>
       <body className="min-h-full flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors">
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <MotionProvider>
           <LanguageProvider>
             <AuthProvider>

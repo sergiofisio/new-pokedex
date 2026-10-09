@@ -22,7 +22,8 @@ export default function AdSlot({ slot = 'banner', className = '' }: { slot?: AdS
 
     useEffect(() => {
         const element = ref.current
-        if (!element || element.dataset.adsbygoogleStatus) return
+        if (!element || element.dataset.requested) return
+        element.dataset.requested = 'true'
         try {
             (window.adsbygoogle = window.adsbygoogle ?? []).push({})
         } catch {}

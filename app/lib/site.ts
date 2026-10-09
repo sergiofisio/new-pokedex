@@ -1,4 +1,5 @@
 export const SITE_NAME = 'Taverna dos Jogos'
+export const SITE_URL = 'https://tavernadosjogos.com.br'
 export const SITE_DESCRIPTION = 'Pokédex, biblioteca de cartas de Hearthstone, desafios diários, Hearthdle, deckbuilder e duelos entre jogadores.'
 
 export type World = 'pokemon' | 'hearthstone' | 'neutral'
