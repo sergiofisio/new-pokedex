@@ -25,13 +25,22 @@ mkdir -p "$APP_DIR/releases" "$APP_DIR/shared"
 touch "$APP_DIR/shared/.env.production"
 chmod 600 "$APP_DIR/shared/.env.production"
 
-echo "==> Nginx"
-if [ ! -f "/etc/nginx/sites-available/$SITE" ]; then
+echo "==> Nginx atrás do Cloudflare"
+{
+  echo "# IPs do Cloudflare: usa o IP real do visitante"
+  for ip in $(curl -fsS https://www.cloudflare.com/ips-v4) $(curl -fsS https://www.cloudflare.com/ips-v6); do
+    echo "set_real_ip_from $ip;"
+  done
+  echo "real_ip_header CF-Connecting-IP;"
+} > /etc/nginx/conf.d/cloudflare-realip.conf
+mkdir -p /etc/ssl/cloudflare
+chmod 700 /etc/ssl/cloudflare
+if [ -f /etc/ssl/cloudflare/origin.pem ] && [ -f /etc/ssl/cloudflare/origin.key ]; then
   curl -fsSL "$RAW/nginx.conf" -o "/etc/nginx/sites-available/$SITE"
   ln -sfn "/etc/nginx/sites-available/$SITE" "/etc/nginx/sites-enabled/$SITE"
-  nginx -t
-  systemctl reload nginx
 fi
+nginx -t
+systemctl reload nginx
 
 echo "==> PM2 na inicialização"
 systemctl is-enabled pm2-root >/dev/null 2>&1 || pm2 startup systemd -u root --hp /root >/dev/null
@@ -40,7 +49,7 @@ cat <<EOF
 
 Pronto. Falta:
   1. Colar as variáveis em $APP_DIR/shared/.env.production
-  2. Rodar o primeiro deploy pelo GitHub Actions
-  3. Depois de apontar o DNS para esta VPS:
-     certbot --nginx -d $SITE -d www.$SITE --redirect
+  2. Colocar o certificado de origem do Cloudflare em /etc/ssl/cloudflare/origin.pem
+     e origin.key (chmod 600) e rodar este script de novo para ativar o site no Nginx
+  3. Rodar o primeiro deploy pelo GitHub Actions
 EOF
