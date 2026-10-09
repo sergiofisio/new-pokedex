@@ -42,7 +42,7 @@ switch_to() {
 
 healthy() {
   for _ in $(seq 1 30); do
-    if curl -fsS -o /dev/null "http://127.0.0.1:$APP_PORT/robots.txt"; then
+    if curl -fs -o /dev/null "http://127.0.0.1:$APP_PORT/robots.txt"; then
       return 0
     fi
     sleep 2
