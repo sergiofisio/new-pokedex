@@ -22,11 +22,11 @@ export default function Header() {
   return (
     <header className={`w-full border-b-4 px-4 text-white shadow-md transition-colors ${WORLD_STYLES[world]}`}>
       <div className="container mx-auto flex h-16 items-center justify-between gap-3">
-        <h1 className="text-2xl font-black tracking-tight">
+        <h1 className="shrink-0 text-2xl font-black tracking-tight">
           <Link href="/" className="flex items-center gap-2">
             {world !== 'hearthstone' && <Pokeball />}
             {world !== 'pokemon' && <HsEmblem className="size-9" />}
-            <span className="max-md:sr-only">{SITE_NAME}</span>
+            <span className="whitespace-nowrap max-lg:sr-only">{SITE_NAME}</span>
           </Link>
         </h1>
         <div className="flex items-center gap-2">
