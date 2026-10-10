@@ -3,6 +3,7 @@ import { pageMetadata, faqJsonLd } from "../lib/seo";
 import ChallengeHub from "../components/challenge/hub";
 import PageGuide from "../components/pageGuide";
 import JsonLd from "../components/jsonLd";
+import AdScript from "../components/ads/adScript";
 import { MESSAGES, type MessageKey } from "../i18n/translations";
 
 export const metadata: Metadata = pageMetadata({
@@ -23,6 +24,7 @@ const FAQ: [MessageKey, MessageKey][] = [
 export default function ChallengesPage() {
   return (
     <ChallengeHub>
+      <AdScript />
       <PageGuide title="guideChallengesTitle" faq={FAQ} />
       <JsonLd data={faqJsonLd(FAQ.map(([question, answer]) => [MESSAGES.pt[question], MESSAGES.pt[answer]]))} />
     </ChallengeHub>

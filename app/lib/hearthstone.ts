@@ -48,38 +48,45 @@ interface RawCard {
     a?: number; h?: number; am?: number; ra?: string[]; sc?: string; m?: string[]; ru?: Record<string, number>; o?: number; ar?: string; u?: 1; b?: 1
 }
 
+export interface RawHsData {
+    sets: HsSet[]
+    cards: RawCard[]
+}
+
+export function parseHsData({ sets, cards: raw }: RawHsData): HsData {
+    const cards: HsCard[] = raw.map((card) => ({
+        dbfId: card.d,
+        id: card.i,
+        name: card.n,
+        cost: card.c,
+        type: card.t,
+        rarity: card.r,
+        set: card.s,
+        classes: card.k,
+        attack: card.a,
+        health: card.h,
+        armor: card.am,
+        races: card.ra ?? [],
+        spellSchool: card.sc,
+        mechanics: card.m ?? [],
+        runes: card.ru,
+        copyOf: card.o,
+        artist: card.ar,
+        unique: card.u === 1,
+        bundled: card.b === 1,
+    }))
+    return { sets, cards, unique: cards.filter((card) => card.unique), byDbf: new Map(cards.map((card) => [card.dbfId, card])) }
+}
+
 let dataPromise: Promise<HsData> | null = null
 
 export function loadHsData(): Promise<HsData> {
     dataPromise ??= fetch('/data/hs-cards.json')
         .then((response) => {
             if (!response.ok) throw new Error(`hs-cards: HTTP ${response.status}`)
-            return response.json() as Promise<{ sets: HsSet[]; cards: RawCard[] }>
+            return response.json() as Promise<RawHsData>
         })
-        .then(({ sets, cards: raw }) => {
-            const cards: HsCard[] = raw.map((card) => ({
-                dbfId: card.d,
-                id: card.i,
-                name: card.n,
-                cost: card.c,
-                type: card.t,
-                rarity: card.r,
-                set: card.s,
-                classes: card.k,
-                attack: card.a,
-                health: card.h,
-                armor: card.am,
-                races: card.ra ?? [],
-                spellSchool: card.sc,
-                mechanics: card.m ?? [],
-                runes: card.ru,
-                copyOf: card.o,
-                artist: card.ar,
-                unique: card.u === 1,
-                bundled: card.b === 1,
-            }))
-            return { sets, cards, unique: cards.filter((card) => card.unique), byDbf: new Map(cards.map((card) => [card.dbfId, card])) }
-        })
+        .then(parseHsData)
         .catch((error) => {
             dataPromise = null
             throw error
@@ -123,6 +130,16 @@ export const HS_TYPES: HsCardType[] = ['MINION', 'SPELL', 'WEAPON', 'HERO', 'LOC
 export const HS_RARITIES: HsRarity[] = ['FREE', 'COMMON', 'RARE', 'EPIC', 'LEGENDARY']
 
 export const CRAFT_COST: Record<HsRarity, number> = { FREE: 0, COMMON: 40, RARE: 100, EPIC: 400, LEGENDARY: 1600 }
+export const DISENCHANT_VALUE: Record<HsRarity, number> = { FREE: 0, COMMON: 5, RARE: 20, EPIC: 100, LEGENDARY: 400 }
+export const isFreeSet = (set: Pick<HsSet, 'id'>) => set.id === 'CORE'
+
+export const cardSlug = (card: Pick<HsCard, 'dbfId' | 'name'>) => {
+    const base = normalizeSearch(card.name[0]).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
+    return base ? `${base}-${card.dbfId}` : String(card.dbfId)
+}
+export const cardPath = (card: Pick<HsCard, 'dbfId' | 'name'>) => `/hearthstone/cartas/${cardSlug(card)}`
+
+export const setSlug = (set: Pick<HsSet, 'id'>) => set.id.toLowerCase().replace(/_/g, '-')
 
 export const CLASS_COLORS: Record<string, string> = {
     DEATHKNIGHT: '#4b6b8a',

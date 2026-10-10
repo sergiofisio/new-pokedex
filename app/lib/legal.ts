@@ -39,7 +39,7 @@ export const LEGAL: Record<LegalDoc, Record<Language, LegalSection[]>> = {
             {
                 title: 'Serviços de terceiros',
                 paragraphs: [
-                    'As imagens e dados dos Pokémon vêm da PokéAPI, e os das cartas de Hearthstone vêm do HearthstoneJSON. A hospedagem é feita pela Vercel. Esses serviços podem registrar o seu endereço IP ao entregar os arquivos.',
+                    'As imagens e dados dos Pokémon vêm da PokéAPI, e os das cartas de Hearthstone vêm do HearthstoneJSON. O site roda num servidor próprio na Hostinger e passa pela rede da Cloudflare, que protege e acelera as conexões. Esses serviços podem registrar o seu endereço IP ao entregar os arquivos.',
                 ],
             },
             {
@@ -80,7 +80,7 @@ export const LEGAL: Record<LegalDoc, Record<Language, LegalSection[]>> = {
             {
                 title: 'Third-party services',
                 paragraphs: [
-                    'Pokémon images and data come from PokéAPI, and Hearthstone card data comes from HearthstoneJSON. Hosting is provided by Vercel. These services may log your IP address when delivering files.',
+                    'Pokémon images and data come from PokéAPI, and Hearthstone card data comes from HearthstoneJSON. The site runs on its own server at Hostinger and goes through Cloudflare’s network, which protects and speeds up connections. These services may log your IP address when delivering files.',
                 ],
             },
             {

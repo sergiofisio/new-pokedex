@@ -1,9 +1,10 @@
 'use client'
 
 import { useEffect, useRef } from "react";
+import Link from "next/link";
 import { motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
-import { CRAFT_COST, RARITY_COLORS, CLASS_COLORS, cardClassLabel, cardName, cardTribe, hsLabel, isStandard, setName, type HsCard, type HsData } from "../../lib/hearthstone";
+import { CRAFT_COST, RARITY_COLORS, CLASS_COLORS, cardClassLabel, cardPath, cardName, cardTribe, hsLabel, isStandard, setName, type HsCard, type HsData } from "../../lib/hearthstone";
 import { CardText, HsCardImage, ManaGem } from "./cardImage";
 import { useCardText } from "./data";
 
@@ -172,6 +173,10 @@ function CardDetail({ card, data, previousId, nextId, onNavigate, onClose }: Car
                         </div>
                     )}
                 </dl>
+
+                <Link href={cardPath(card)} className="self-start font-bold text-amber-300 underline underline-offset-2 hover:text-amber-100">
+                    {t('viewFullPage')} →
+                </Link>
 
                 {onNavigate && (previousId !== undefined || nextId !== undefined) && (
                     <div className="mt-auto flex justify-between gap-2">

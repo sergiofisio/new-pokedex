@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { pageMetadata } from "../../lib/seo";
 import HsHome from "../../components/hearthstone/home";
+import AdScript from "../../components/ads/adScript";
 
 export const metadata: Metadata = pageMetadata({
   title: "Hearthstone",
@@ -9,5 +10,10 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function HearthstonePage() {
-  return <HsHome />;
+  return (
+    <>
+      <AdScript />
+      <HsHome />
+    </>
+  );
 }

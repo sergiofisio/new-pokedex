@@ -6,7 +6,6 @@ import Footer from "./components/footer";
 import { LanguageProvider } from "./context/languageContext";
 import { AuthProvider } from "./context/authContext";
 import MotionProvider from "./components/motionProvider";
-import AdScript from "./components/ads/adScript";
 import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "./lib/site";
 import { ADSENSE_CLIENT } from "./lib/ads";
 import { OG_IMAGE, SITE_KEYWORDS, websiteJsonLd } from "./lib/seo";
@@ -56,9 +55,6 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <head>
-        <AdScript />
-      </head>
       <body className="min-h-full flex flex-col bg-white text-black dark:bg-black dark:text-white transition-colors">
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
         <JsonLd data={websiteJsonLd} />

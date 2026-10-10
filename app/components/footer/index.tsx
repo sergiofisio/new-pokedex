@@ -16,6 +16,8 @@ export default function Footer() {
         <div className="flex max-w-3xl flex-col gap-1 text-sm text-zinc-500 dark:text-zinc-400">
           <p>
             © 2026 {SITE_NAME} · {t('footerFanProject')} ·{' '}
+            <Link href="/sobre" className="underline-offset-2 hover:underline">{t('aboutTitle')}</Link> ·{' '}
+            <Link href="/guias" className="underline-offset-2 hover:underline">{t('guidesTitle')}</Link> ·{' '}
             <Link href="/privacidade" className="underline-offset-2 hover:underline">{t('privacyTitle')}</Link> ·{' '}
             <Link href="/termos" className="underline-offset-2 hover:underline">{t('termsTitle')}</Link>
             {ADSENSE_CLIENT && <> · <ConsentButton /></>}
