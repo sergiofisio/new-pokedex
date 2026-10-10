@@ -1,5 +1,5 @@
 import { decode, encode, type FormatType } from "deckstrings";
-import { CRAFT_COST, canonicalId, isStandard, maxCopies, type HsCard, type HsData, type HsFormat } from "./hearthstone";
+import { canonicalId, craftCost, isStandard, maxCopies, type HsCard, type HsData, type HsFormat } from "./hearthstone";
 import { ownedCopies, type Collection } from "./hsCollection";
 import META_DECKS from "../data/hs-meta-decks.json";
 
@@ -128,10 +128,10 @@ export function deckCost(data: HsData, deck: Deck, owned: Collection): DeckCost 
     for (const { card, count } of deckEntries(data, deck)) {
         const have = Math.min(count, ownedCopies(owned, card))
         const lacking = count - have
-        total += CRAFT_COST[card.rarity] * (card.bundled ? 0 : count)
+        total += craftCost(card) * count
         ownedCount += have
         if (lacking > 0) {
-            missing += CRAFT_COST[card.rarity] * lacking
+            missing += craftCost(card) * lacking
             missingCards.push({ card, count: lacking })
         }
     }

@@ -5,7 +5,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { useLanguage } from "../../context/languageContext";
 import { cardMechanics, cardUsage, describeCard } from "../../lib/cardText";
-import { CLASS_COLORS, CRAFT_COST, DISENCHANT_VALUE, RARITY_COLORS, cardName, cardRender, hsLabel, isFreeSet, setName, setSlug } from "../../lib/hearthstone";
+import { CLASS_COLORS, DISENCHANT_VALUE, RARITY_COLORS, cardName, cardRender, craftCost, hsLabel, setName, setSlug } from "../../lib/hearthstone";
 import type { CardPageData } from "../../lib/hsServer";
 import type { Language } from "../../i18n/translations";
 import { CardText, HsCardImage, ManaGem } from "./cardImage";
@@ -49,7 +49,7 @@ export default function HsCardProfile({ page }: { page: CardPageData }) {
     const usage = cardUsage(card, language, name)
     const [text, flavor] = texts[language]
     const accent = CLASS_COLORS[card.classes[0]] ?? CLASS_COLORS.NEUTRAL
-    const craft = card.bundled || isFreeSet(set) ? 0 : CRAFT_COST[card.rarity]
+    const craft = craftCost(card)
 
     return (
         <article className="mx-auto flex w-full max-w-5xl flex-col gap-6 px-4 py-8">

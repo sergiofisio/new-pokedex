@@ -43,7 +43,7 @@ export function getCollection() {
 export const getServerCollection = () => EMPTY
 
 export const ownedCopies = (owned: Collection, card: HsCard) =>
-    card.rarity === 'FREE' || card.bundled ? maxCopies(card) : Math.min(maxCopies(card), owned[canonicalId(card)] ?? 0)
+    card.free || card.bundled ? maxCopies(card) : Math.min(maxCopies(card), owned[canonicalId(card)] ?? 0)
 
 async function flush() {
     if (!userId || pending.size === 0) return

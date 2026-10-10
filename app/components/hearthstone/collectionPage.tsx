@@ -25,7 +25,7 @@ export default function CollectionPage() {
     return <Collection data={state.data} />
 }
 
-const collectable = (card: HsCard) => !card.bundled && card.rarity !== 'FREE'
+const collectable = (card: HsCard) => !card.bundled && !card.free
 
 function Collection({ data }: { data: HsData }) {
     const { t, language } = useLanguage()
@@ -93,12 +93,12 @@ function StatCard({ title, have, total, dust }: { title: string; have: number; t
 function QuickActions({ data, cards }: { data: HsData; cards: HsCard[] }) {
     const { t, language } = useLanguage()
     const owned = useCollection()
-    const [set, setSet] = useState('CORE')
+    const inSet = (id: string) => cards.filter((card) => data.sets[card.set].id === id)
+    const [set, setSet] = useState(() => [...data.sets].reverse().find((item) => inSet(item.id).length)?.id ?? '')
     const [codes, setCodes] = useState('')
     const [message, setMessage] = useState('')
 
     const setCards = (list: HsCard[], fill: boolean) => setCopies(list.map((card) => [card, fill ? maxCopies(card) : 0]))
-    const inSet = (id: string) => cards.filter((card) => data.sets[card.set].id === id)
 
     const importCodes = () => {
         let imported = 0

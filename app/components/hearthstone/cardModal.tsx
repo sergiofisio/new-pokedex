@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { motion } from "motion/react";
 import { useLanguage } from "../../context/languageContext";
-import { CRAFT_COST, RARITY_COLORS, CLASS_COLORS, cardClassLabel, cardPath, cardName, cardTribe, hsLabel, isStandard, setName, type HsCard, type HsData } from "../../lib/hearthstone";
+import { RARITY_COLORS, CLASS_COLORS, cardClassLabel, cardPath, craftCost, cardName, cardTribe, hsLabel, isStandard, setName, type HsCard, type HsData } from "../../lib/hearthstone";
 import { CardText, HsCardImage, ManaGem } from "./cardImage";
 import { useCardText } from "./data";
 
@@ -73,7 +73,7 @@ function CardDetail({ card, data, previousId, nextId, onNavigate, onClose }: Car
     const set = data.sets[card.set]
     const standard = isStandard(data, card)
     const tribe = cardTribe(card)
-    const craft = CRAFT_COST[card.rarity]
+    const craft = craftCost(card)
     const accent = CLASS_COLORS[card.classes[0]] ?? CLASS_COLORS.NEUTRAL
 
     const stats = [

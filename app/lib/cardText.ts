@@ -1,5 +1,5 @@
 import type { Language } from "../i18n/translations";
-import { CRAFT_COST, DISENCHANT_VALUE, HS_RARITIES, hsLabel, isFreeSet, maxCopies, setName, stripCardText, type HsCard, type HsSet } from "./hearthstone";
+import { CRAFT_COST, DISENCHANT_VALUE, HS_RARITIES, craftCost, hsLabel, isFreeSet, maxCopies, setName, stripCardText, type HsCard, type HsSet } from "./hearthstone";
 
 const MECHANICS: Record<string, { pt: [string, string]; en: [string, string] }> = {
     BATTLECRY: { pt: ['Grito de Guerra', 'Efeito que acontece quando a carta é jogada da mão.'], en: ['Battlecry', 'An effect that happens when the card is played from your hand.'] },
@@ -225,14 +225,14 @@ export function describeCard(card: HsCard, set: HsSet, standard: boolean, reprin
         collection.push(pt
             ? 'Ela vem junto de outra carta (pacote de lendária Fábula) e não pode ser criada separadamente.'
             : 'It comes bundled with another card (a Fabled legendary package) and can’t be crafted on its own.')
-    } else if (isFreeSet(set)) {
-        collection.push(pt
-            ? 'As cartas da coleção Básica são liberadas de graça para todos os jogadores, então esta carta não pode ser criada nem desencantada.'
-            : 'Core set cards are unlocked for free for every player, so this card can’t be crafted or disenchanted.')
     } else if (card.rarity === 'FREE') {
         collection.push(pt
             ? 'Por ser uma carta básica, todo jogador recebe de graça: não pode ser criada nem desencantada.'
             : 'As a free card, every player gets it at no cost: it can’t be crafted or disenchanted.')
+    } else if (card.free) {
+        collection.push(pt
+            ? 'Ela faz parte da coleção Básica, liberada de graça para todos os jogadores, então não precisa ser criada e não pode ser desencantada.'
+            : 'It is part of the Core set, unlocked for free for every player, so it doesn’t need to be crafted and can’t be disenchanted.')
     } else {
         const craft = CRAFT_COST[card.rarity]
         const dust = DISENCHANT_VALUE[card.rarity]
@@ -271,17 +271,15 @@ export function describeCard(card: HsCard, set: HsSet, standard: boolean, reprin
     return { identity, format: formatText, collection, stats }
 }
 
-export type SetCard = Pick<HsCard, 'dbfId' | 'id' | 'name' | 'cost' | 'rarity' | 'classes' | 'type' | 'bundled'> & { slug: string }
+export type SetCard = Pick<HsCard, 'dbfId' | 'id' | 'name' | 'cost' | 'rarity' | 'classes' | 'type' | 'bundled' | 'free'> & { slug: string }
 
 export function describeSet(set: HsSet, cards: SetCard[], language: Language) {
     const pt = language === 'pt'
     const counts = HS_RARITIES.map((rarity) => [rarity, cards.filter((card) => card.rarity === rarity).length] as const).filter(([, n]) => n > 0)
     const plural = (word: string, n: number) => !pt || n === 1 ? word : word.endsWith('m') ? `${word.slice(0, -1)}ns` : `${word}s`
     const countText = listOf(counts.map(([rarity, n]) => `${n} ${plural(hsLabel(rarity, language).toLowerCase(), n)}`), language)
-    const dust = isFreeSet(set) ? 0 : cards
-        .filter((card) => !card.bundled && card.rarity !== 'FREE')
-        .reduce((sum, card) => sum + CRAFT_COST[card.rarity] * maxCopies(card), 0)
-    const legendaries = cards.filter((card) => card.rarity === 'LEGENDARY').length
+    const dust = cards.reduce((sum, card) => sum + craftCost(card) * maxCopies(card), 0)
+    const legendaries = cards.filter((card) => card.rarity === 'LEGENDARY' && craftCost(card) > 0).length
     const name = setName(set, language)
     const locale = pt ? 'pt-BR' : 'en-US'
 

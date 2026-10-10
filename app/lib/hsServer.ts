@@ -144,5 +144,5 @@ export async function getSetPage(slug: string) {
     if (index < 0) return null
     const cards = data.unique.filter((card) => card.set === index).sort(byCost)
     if (!cards.length) return null
-    return { set: data.sets[index], slug, cards: cards.map((card) => ({ ...toCardLink(card), classes: card.classes, type: card.type, bundled: card.bundled })) }
+    return { set: data.sets[index], slug, cards: cards.map((card) => ({ ...toCardLink(card), classes: card.classes, type: card.type, bundled: card.bundled, free: card.free })) }
 }

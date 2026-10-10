@@ -34,6 +34,7 @@ export interface HsCard {
     artist?: string
     unique: boolean
     bundled: boolean
+    free: boolean
 }
 
 export interface HsData {
@@ -54,6 +55,7 @@ export interface RawHsData {
 }
 
 export function parseHsData({ sets, cards: raw }: RawHsData): HsData {
+    const freeNames = new Set(raw.filter((card) => isFreeSet(sets[card.s] ?? { id: '' })).map((card) => card.n[1]))
     const cards: HsCard[] = raw.map((card) => ({
         dbfId: card.d,
         id: card.i,
@@ -74,6 +76,7 @@ export function parseHsData({ sets, cards: raw }: RawHsData): HsData {
         artist: card.ar,
         unique: card.u === 1,
         bundled: card.b === 1,
+        free: card.r === 'FREE' || freeNames.has(card.n[1]),
     }))
     return { sets, cards, unique: cards.filter((card) => card.unique), byDbf: new Map(cards.map((card) => [card.dbfId, card])) }
 }
@@ -132,6 +135,7 @@ export const HS_RARITIES: HsRarity[] = ['FREE', 'COMMON', 'RARE', 'EPIC', 'LEGEN
 export const CRAFT_COST: Record<HsRarity, number> = { FREE: 0, COMMON: 40, RARE: 100, EPIC: 400, LEGENDARY: 1600 }
 export const DISENCHANT_VALUE: Record<HsRarity, number> = { FREE: 0, COMMON: 5, RARE: 20, EPIC: 100, LEGENDARY: 400 }
 export const isFreeSet = (set: Pick<HsSet, 'id'>) => set.id === 'CORE'
+export const craftCost = (card: Pick<HsCard, 'rarity' | 'bundled' | 'free'>) => card.bundled || card.free ? 0 : CRAFT_COST[card.rarity]
 
 export const cardSlug = (card: Pick<HsCard, 'dbfId' | 'name'>) => {
     const base = normalizeSearch(card.name[0]).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '')
